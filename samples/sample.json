@@ -1,0 +1,382 @@
+{
+  "startedDateTime": "2015-05-26T20:12:02.134Z",
+  "time": 1358.7450000013632,
+  "request": {
+    "method": "POST",
+    "url": "https://adminv2.1stdibs.com/soa/formservice/1/clump",
+    "httpVersion": "HTTP/1.1",
+    "headers": [
+      {
+        "name": "Cookie",
+        "value": "optimizelyEndUserId=oeu1432244338764r0.08427739003673196; __gads=ID=66f99d2f7eb1e3b7:T=1432244341:S=ALNI_MadxTyM3xFRQSH_nQ9neYZL4U-_Qg; eli=1; _ssc=1432244365-5ecf8; guestId=4d924629-70f5-9a93-bc3d-babcd891e7ad; UUI=UUI555e51b2ea4da; userToken=1121261_70cf43acfa2b128306afaf15f5bbf050131a34c114ffbaceacb2d6b708ac0be1; prck=xWzjZ7LSOhdRoUxqbBfd8dhu8SKrQRmu; phck=xWzjZ7LSOhdRoUxqbBfd8dhu8SKrQRmu; ed_reg=xWzjZ7LSOhdRoUxqbBfd8dhu8SKrQRmu; _ga=GA1.2.312502811.1431960865; __utma=78698571.312502811.1431960865.1432649979.1432664222.14; __utmc=78698571; __utmz=78698571.1431973751.2.2.utmcsr=github.com|utmccn=(referral)|utmcmd=referral|utmcct=/; __utmv=78698571.|1=User%20Id=3331762=1; lcv=%7B%221%22%3A%7B%22slot%22%3A1%2C%22name%22%3A%22User%20Id%22%2C%22value%22%3A%223331762%22%2C%22scope%22%3A1%7D%2C%223%22%3A%7B%22slot%22%3A3%2C%22name%22%3A%22Registered%20and%20Logged%20In%22%2C%22value%22%3A%22USD%20Selected%22%2C%22scope%22%3A2%7D%2C%224%22%3A%7B%22slot%22%3A4%2C%22name%22%3A%22Homepage%22%2C%22value%22%3A%22log%3Dy%22%2C%22check_login%22%3Atrue%2C%22scope%22%3A3%7D%2C%225%22%3A%7B%22slot%22%3A5%2C%22name%22%3A%22Photorealism%20-%20a_504%22%2C%22value%22%3A%22pdp-available-price%22%2C%22scope%22%3A3%7D%7D; optimizelySegments=%7B%22952042542%22%3A%22referral%22%2C%22964950192%22%3A%22gc%22%2C%22970220174%22%3A%22false%22%2C%222217310715%22%3A%22none%22%7D; optimizelyBuckets=%7B%222224750908%22%3A%222198721100%22%2C%222671120847%22%3A%222671610574%22%2C%222763870261%22%3A%220%22%2C%222779010768%22%3A%220%22%2C%222779980072%22%3A%220%22%2C%222788031035%22%3A%222792070310%22%2C%222791460224%22%3A%220%22%2C%222820330087%22%3A%220%22%2C%222823090009%22%3A%222825570055%22%2C%222883870160%22%3A%222886700148%22%7D; connect.sid=s%3AoC54jzObhGqAGwY8mIWxFvTLxpbp_cPj.yN91APnFCP9GVWNNP0wJXMOFVKeBtrfAS9ionDUJtSA; __utma=132849758.659780213.1432057613.1432649993.1432664245.7; __utmb=132849758.40.10.1432664245; __utmc=132849758; __utmz=132849758.1432664245.7.4.utmcsr=qa.1stdibs.com|utmccn=(referral)|utmcmd=referral|utmcct=/login/internal"
+      },
+      {
+        "name": "Origin",
+        "value": "https://adminv2.1stdibs.com"
+      },
+      {
+        "name": "Accept-Encoding",
+        "value": "gzip, deflate"
+      },
+      {
+        "name": "Host",
+        "value": "adminv2.1stdibs.com"
+      },
+      {
+        "name": "Accept-Language",
+        "value": "en-US,en;q=0.8"
+      },
+      {
+        "name": "User-Agent",
+        "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.81 Safari/537.36"
+      },
+      {
+        "name": "Content-Type",
+        "value": "application/json"
+      },
+      {
+        "name": "Accept",
+        "value": "application/json, text/javascript, */*; q=0.01"
+      },
+      {
+        "name": "Referer",
+        "value": "https://adminv2.1stdibs.com/internal/omt"
+      },
+      {
+        "name": "X-Requested-With",
+        "value": "XMLHttpRequest"
+      },
+      {
+        "name": "Connection",
+        "value": "keep-alive"
+      },
+      {
+        "name": "Content-Length",
+        "value": "215"
+      }
+    ],
+    "queryString": [],
+    "cookies": [
+      {
+        "name": "optimizelyEndUserId",
+        "value": "oeu1432244338764r0.08427739003673196",
+        "expires": null,
+        "httpOnly": false,
+        "secure": false
+      },
+      {
+        "name": "__gads",
+        "value": "ID=66f99d2f7eb1e3b7:T=1432244341:S=ALNI_MadxTyM3xFRQSH_nQ9neYZL4U-_Qg",
+        "expires": null,
+        "httpOnly": false,
+        "secure": false
+      },
+      {
+        "name": "eli",
+        "value": "1",
+        "expires": null,
+        "httpOnly": false,
+        "secure": false
+      },
+      {
+        "name": "_ssc",
+        "value": "1432244365-5ecf8",
+        "expires": null,
+        "httpOnly": false,
+        "secure": false
+      },
+      {
+        "name": "guestId",
+        "value": "4d924629-70f5-9a93-bc3d-babcd891e7ad",
+        "expires": null,
+        "httpOnly": false,
+        "secure": false
+      },
+      {
+        "name": "UUI",
+        "value": "UUI555e51b2ea4da",
+        "expires": null,
+        "httpOnly": false,
+        "secure": false
+      },
+      {
+        "name": "userToken",
+        "value": "1121261_70cf43acfa2b128306afaf15f5bbf050131a34c114ffbaceacb2d6b708ac0be1",
+        "expires": null,
+        "httpOnly": false,
+        "secure": false
+      },
+      {
+        "name": "prck",
+        "value": "xWzjZ7LSOhdRoUxqbBfd8dhu8SKrQRmu",
+        "expires": null,
+        "httpOnly": false,
+        "secure": false
+      },
+      {
+        "name": "phck",
+        "value": "xWzjZ7LSOhdRoUxqbBfd8dhu8SKrQRmu",
+        "expires": null,
+        "httpOnly": false,
+        "secure": false
+      },
+      {
+        "name": "ed_reg",
+        "value": "xWzjZ7LSOhdRoUxqbBfd8dhu8SKrQRmu",
+        "expires": null,
+        "httpOnly": false,
+        "secure": false
+      },
+      {
+        "name": "_ga",
+        "value": "GA1.2.312502811.1431960865",
+        "expires": null,
+        "httpOnly": false,
+        "secure": false
+      },
+      {
+        "name": "__utma",
+        "value": "78698571.312502811.1431960865.1432649979.1432664222.14",
+        "expires": null,
+        "httpOnly": false,
+        "secure": false
+      },
+      {
+        "name": "__utmc",
+        "value": "78698571",
+        "expires": null,
+        "httpOnly": false,
+        "secure": false
+      },
+      {
+        "name": "__utmz",
+        "value": "78698571.1431973751.2.2.utmcsr=github.com|utmccn=(referral)|utmcmd=referral|utmcct=/",
+        "expires": null,
+        "httpOnly": false,
+        "secure": false
+      },
+      {
+        "name": "__utmv",
+        "value": "78698571.|1=User%20Id=3331762=1",
+        "expires": null,
+        "httpOnly": false,
+        "secure": false
+      },
+      {
+        "name": "lcv",
+        "value": "%7B%221%22%3A%7B%22slot%22%3A1%2C%22name%22%3A%22User%20Id%22%2C%22value%22%3A%223331762%22%2C%22scope%22%3A1%7D%2C%223%22%3A%7B%22slot%22%3A3%2C%22name%22%3A%22Registered%20and%20Logged%20In%22%2C%22value%22%3A%22USD%20Selected%22%2C%22scope%22%3A2%7D%2C%224%22%3A%7B%22slot%22%3A4%2C%22name%22%3A%22Homepage%22%2C%22value%22%3A%22log%3Dy%22%2C%22check_login%22%3Atrue%2C%22scope%22%3A3%7D%2C%225%22%3A%7B%22slot%22%3A5%2C%22name%22%3A%22Photorealism%20-%20a_504%22%2C%22value%22%3A%22pdp-available-price%22%2C%22scope%22%3A3%7D%7D",
+        "expires": null,
+        "httpOnly": false,
+        "secure": false
+      },
+      {
+        "name": "optimizelySegments",
+        "value": "%7B%22952042542%22%3A%22referral%22%2C%22964950192%22%3A%22gc%22%2C%22970220174%22%3A%22false%22%2C%222217310715%22%3A%22none%22%7D",
+        "expires": null,
+        "httpOnly": false,
+        "secure": false
+      },
+      {
+        "name": "optimizelyBuckets",
+        "value": "%7B%222224750908%22%3A%222198721100%22%2C%222671120847%22%3A%222671610574%22%2C%222763870261%22%3A%220%22%2C%222779010768%22%3A%220%22%2C%222779980072%22%3A%220%22%2C%222788031035%22%3A%222792070310%22%2C%222791460224%22%3A%220%22%2C%222820330087%22%3A%220%22%2C%222823090009%22%3A%222825570055%22%2C%222883870160%22%3A%222886700148%22%7D",
+        "expires": null,
+        "httpOnly": false,
+        "secure": false
+      },
+      {
+        "name": "connect.sid",
+        "value": "s%3AoC54jzObhGqAGwY8mIWxFvTLxpbp_cPj.yN91APnFCP9GVWNNP0wJXMOFVKeBtrfAS9ionDUJtSA",
+        "expires": null,
+        "httpOnly": false,
+        "secure": false
+      },
+      {
+        "name": "__utma",
+        "value": "132849758.659780213.1432057613.1432649993.1432664245.7",
+        "expires": null,
+        "httpOnly": false,
+        "secure": false
+      },
+      {
+        "name": "__utmb",
+        "value": "132849758.40.10.1432664245",
+        "expires": null,
+        "httpOnly": false,
+        "secure": false
+      },
+      {
+        "name": "__utmc",
+        "value": "132849758",
+        "expires": null,
+        "httpOnly": false,
+        "secure": false
+      },
+      {
+        "name": "__utmz",
+        "value": "132849758.1432664245.7.4.utmcsr=qa.1stdibs.com|utmccn=(referral)|utmcmd=referral|utmcct=/login/internal",
+        "expires": null,
+        "httpOnly": false,
+        "secure": false
+      }
+    ],
+    "headersSize": 2583,
+    "bodySize": 215,
+    "postData": {
+      "mimeType": "application/json",
+      "text": "{\"mode\":\"SYNC_PARALLEL\",\"abortOnError\":\"N\",\"elements\":[{\"method\":\"GET\",\"url\":\"/soa/identity-3/1/users?permission=OMT_SUPPORT_REP&userToken=1121261_70cf43acfa2b128306afaf15f5bbf050131a34c114ffbaceacb2d6b708ac0be1\"}]}"
+    }
+  },
+  "response": {
+    "status": 200,
+    "statusText": "OK",
+    "httpVersion": "HTTP/1.1",
+    "headers": [
+      {
+        "name": "Date",
+        "value": "Tue, 26 May 2015 20:12:02 GMT"
+      },
+      {
+        "name": "Content-Encoding",
+        "value": "gzip"
+      },
+      {
+        "name": "Connection",
+        "value": "keep-alive"
+      },
+      {
+        "name": "X-Forwarded-For",
+        "value": "98.116.133.82, 172.20.200.63, 127.0.0.1"
+      },
+      {
+        "name": "x-url",
+        "value": "/formservice/1/clump"
+      },
+      {
+        "name": "x-host",
+        "value": "www.1stdibs.com"
+      },
+      {
+        "name": "X-Cache",
+        "value": "MISS, MISS"
+      },
+      {
+        "name": "X-Forwarded-Host",
+        "value": "adminv2.1stdibs.com"
+      },
+      {
+        "name": "X-Forwarded-Proto",
+        "value": "http"
+      },
+      {
+        "name": "X-Forwarded-Proto",
+        "value": "https"
+      },
+      {
+        "name": "Content-Length",
+        "value": "1516"
+      },
+      {
+        "name": "X-Dibs-BackEnd",
+        "value": "ip-172-20-200-136"
+      },
+      {
+        "name": "X-Served-By",
+        "value": "cache-ord1727-ORD, cache-jfk1025-JFK"
+      },
+      {
+        "name": "Accept-Ranges",
+        "value": "bytes"
+      },
+      {
+        "name": "Accept-Ranges",
+        "value": "bytes"
+      },
+      {
+        "name": "Accept-Ranges",
+        "value": "bytes"
+      },
+      {
+        "name": "X-Forwarded-Server",
+        "value": "adminv2.1stdibs.com"
+      },
+      {
+        "name": "Last-Modified",
+        "value": "Tue, 26 May 2015 20:12:02 GMT"
+      },
+      {
+        "name": "Server",
+        "value": "nginx/1.5.10"
+      },
+      {
+        "name": "X-Timer",
+        "value": "S1432671122.063785,VS0,VE49"
+      },
+      {
+        "name": "X-Forwarded-Backend",
+        "value": "fastlyshield--shield_cache_ord1727_ORD"
+      },
+      {
+        "name": "Vary",
+        "value": "Accept-Encoding,X-Purpose,X-Moz"
+      },
+      {
+        "name": "Content-Type",
+        "value": "application/json;charset=UTF-8"
+      },
+      {
+        "name": "Via",
+        "value": "1.1 varnish"
+      },
+      {
+        "name": "Via",
+        "value": "1.1 varnish"
+      },
+      {
+        "name": "X-Requested-With",
+        "value": "XMLHttpRequest"
+      },
+      {
+        "name": "Cache-Control",
+        "value": "no-cache"
+      },
+      {
+        "name": "X-Age",
+        "value": "0"
+      },
+      {
+        "name": "X-Forwarded-Port",
+        "value": "443"
+      },
+      {
+        "name": "X-VNode",
+        "value": "497239-cache2"
+      },
+      {
+        "name": "X-Cache-Hits",
+        "value": "0, 0"
+      }
+    ],
+    "cookies": [],
+    "content": {
+      "size": 8791,
+      "mimeType": "application/json",
+      "compression": 7275
+    },
+    "redirectURL": "",
+    "headersSize": 966,
+    "bodySize": 1516,
+    "_transferSize": 2482
+  },
+  "cache": {},
+  "timings": {
+    "blocked": 1.1610000001383,
+    "dns": -1,
+    "connect": -1,
+    "send": 0.14999999984865986,
+    "wait": 1356.619999998653,
+    "receive": 0.8140000027233327,
+    "ssl": -1
+  },
+  "connection": "67774",
+  "pageref": "page_1"
+}
