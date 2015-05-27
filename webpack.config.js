@@ -7,6 +7,10 @@ module.exports = {
         path: __dirname + '/js/',
         filename: 'bundle.js'
     },
+    repository: {
+        type: 'git',
+        url: 'git://github.com/liamdickson/clump-tool-revised.git'
+    },
     resolve: {
         extensions: ['', '.js', '.json', '.jsx'],
     },
