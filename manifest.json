@@ -1,0 +1,17 @@
+{
+  "manifest_version": 2,
+
+  "name": "Clump Network Tool",
+  "description": "This extension adds a new tab to the developer tools to look into clump requests",
+  "author": "Liam Dickson",
+  "version": "0.1",
+  "minimum_chrome_version": "10.0",
+  "devtools_page": "devtools.html",
+  
+  "icons": { "128": "icon.png" },
+  "permissions": [
+    "tabs", 
+    "http://*/*",
+    "https://*/*"
+  ]
+}
