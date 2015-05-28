@@ -10,7 +10,11 @@
   
   "icons": { "128": "icon.png" },
   "permissions": [
-    "tabs", 
+    "tabs",
+    "webRequest",
+    "webNavigation",
+    "management",
+    "*://*.google.com/",
     "http://*/*",
     "https://*/*"
   ]

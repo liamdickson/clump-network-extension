@@ -1,0 +1,16 @@
+{
+  "httpCode":200,
+  "message":"OK",
+  "result":{
+    "clumpResponse":{
+      "elements":[
+        {
+          "url":"http://oathkeeper.intranet.1stdibs.com/asdfasdf/?permission=OMT_SUPPORT_REP&userToken=1121261_70cf43acfa2b128306afaf15f5bbf050131a34c114ffbaceacb2d6b708ac0be1",
+          "method":"GET",
+          "payload":Site is temporarily unavailable. Please try again in a moment.,
+          "httpCode":503
+        }
+      ]
+    }
+  }
+}

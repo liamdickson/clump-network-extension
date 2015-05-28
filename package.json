@@ -10,7 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "fixed-data-table": "^0.2.0",
-    "react": "^0.13.3"
+    "react": "^0.13.3",
+    "react-json-inspector": "^4.3.0"
   },
   "resolve": {
     "alias": {
