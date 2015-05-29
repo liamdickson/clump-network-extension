@@ -6,11 +6,14 @@ var Table = FixedDataTable.Table;
 var Column = FixedDataTable.Column;
 var PropTypes = React.PropTypes;
 
+function renderCell(cellData, cellDataKey, rowData, rowIndex, columnData, width) {
+    return cellData.render;
+}
+
 var ResizableTable = React.createClass({
     propTypes: {
         width: PropTypes.number,
         height: PropTypes.number,
-        numCols: PropTypes.number,
         requests: PropTypes.any,
         responses: PropTypes.any,
         timings: PropTypes.any
@@ -19,7 +22,6 @@ var ResizableTable = React.createClass({
         return {
             width: window.innerWidth - 15,
             height: window.innerHeight - 100,
-            numCols: 3,
             requests: [],
             responses: [],
             timings: []
@@ -29,45 +31,71 @@ var ResizableTable = React.createClass({
         this.setState({width: window.innerWidth - 15});
         this.setState({height: window.innerHeight - 100});
     },
-    addNewRequest: function(request) {
-
-        //console.log(request.requestBody);
-
+    addNewClump: function(harLog) {
         var that = this;
 
-        var loc = that.state.requests.length;
+        var filteredHAR = this.parseRequests(harLog);
 
-        var requests = that.state.requests;
-        requests[loc] = request;
-        that.setState({requests: requests});
+        var requests = [];
+        var timings = [];
+
+        for (var i in filteredHAR) {
+            var request = filteredHAR[i];
+
+            requests[i] = request;
+            that.setState({requests: requests});
+
+            timings[i] = request.timings;
+            that.setState({timings: timings});
+        }
+
+        //var responses = [];
+        //filteredHar.forEach(function (data) {
+        //
+        //})
+        //var responsePromises = [];
+        //for (var i in filteredHAR) {
+        //
+        //    responsePromises.push(this.getContent(filteredHAR[i]));
+        //
+        //    Promise.all(responsePromises).then(function (contentArr) {
+        //
+        //    });
+        //
+        //    !function(ii) {
+        //        filteredHAR[i].getContent(function (content, encoding) {
+        //            responses[ii] = JSON.parse(content);
+        //            that.setState({responses: responses});
+        //        });
+        //    }(i)
+        //}
     },
-    addNewClump: function(request) {
-        var that = this;
-
-        //var loc = that.state.requests.length;
-        //
-        //var requests = that.state.requests;
-        //requests[loc] = request;
-        //that.setState({requests: requests});
-        //
-        //var timings = that.state.timings;
-        //timings[loc] = request.timings;
-        //that.setState({timings: timings});
-        //
-        //request.getContent(function (content, encoding) {
-        //    var responses = that.state.responses;
-        //    responses[loc] = JSON.parse(content);
-        //    that.setState({responses: responses});
-        //});
+    getContent: function (harObj) {
+        return new Promise(function (resolve, reject) {
+            harObj.getContent(function(content) {
+                resolve(content);
+            });
+        })
+    },
+    parseRequests: function(harLog) {
+        var output = [];
+        for (var i in harLog){
+            var item = harLog[i];
+            if(item.request.url.includes('clump')){
+                output.push(item);
+            }
+        }
+        return output;
     },
     componentDidMount: function() {
         var that = this;
-        window.addEventListener('request', function (e) {that.addNewRequest(e.detail)});
         window.addEventListener('resize', this.handleResize);
         this.devToolsListenerFunc = function(request) {
             if(request.request.url.includes("clump")){
-                //that.addNewClump(request);
-                chrome.devtools.network.getHAR(function (harLog) {console.log(harLog)});
+                chrome.devtools.network.getHAR(function (harLog) {
+                    console.log('new clump added');
+                    that.addNewClump(harLog.entries);
+                });
             }
         };
         chrome.devtools.network.onRequestFinished.addListener(this.devToolsListenerFunc);
@@ -81,42 +109,71 @@ var ResizableTable = React.createClass({
             var that = this;
             function rowGetter(index) {
                 var request = that.state.requests[index];
-                var requestString = request ? JSON.stringify(request) : "";
-                var timing = that.state.timings[index];
-                var timingString = timing ? JSON.stringify(timing) : "";
+                var requestData = request ? JSON.parse(request.request.postData.text) : "";
                 var response = that.state.responses[index];
-                var responseString = response ? JSON.stringify(response) : "";
+                var responseData = response ? response : "";
+                var timing = that.state.timings[index];
+                var timingData = timing ? timing : "";
+
+                var requestObj = {
+                    data: requestData,
+                    render:
+                        <Inspector data={requestData}
+                            search={false}
+                            class={'json-data'}
+                        />
+                };
+                var responseObj = {
+                    data: responseData,
+                    render:
+                        <Inspector data={responseData}
+                            search={false}
+                            class={'json-data'}
+                        />
+                };
+                var timingObj = {
+                    data: timingData,
+                    render:
+                        <Inspector data={timingData}
+                            search={false}
+                            class={'json-data'}
+                        />
+                };
+
                 return [
-                    requestString,
-                    responseString,
-                    timingString
+                    requestObj,
+                    responseObj,
+                    timingObj
                 ];
             }
 
-            //React.render(
-            //    <Inspector data={ data } />,
-            //    document.getElementById('inspector')
-            //);
+            var numCols = 3;
 
             var req = <Column label="Request"
-                width={this.state.width / this.state.numCols}
+                width={this.state.width / numCols}
+                cellRenderer={renderCell}
+                //cellDataGetter={cellGetter}
                 dataKey={0} />;
 
             var res = <Column label="Response"
-                width={this.state.width / this.state.numCols}
+                width={this.state.width / numCols}
+                cellRenderer={renderCell}
+                //cellDataGetter={cellGetter}
                 dataKey={1} />;
 
             var tim = <Column label="Timings"
-                width={this.state.width / this.state.numCols}
+                width={this.state.width / numCols}
+                cellRenderer={renderCell}
+                //cellDataGetter={cellGetter}
                 dataKey={2} />;
 
             var table = <Table
-                rowHeight={50}
+                rowHeight={500}
                 rowGetter={rowGetter}
                 rowsCount={this.state.requests.length}
                 width={this.state.width}
                 maxHeight={this.state.height}
-                headerHeight={50}>
+                headerHeight={50}>;
             {req}
             {res}
             {tim}
@@ -133,8 +190,3 @@ var ResizableTable = React.createClass({
 });
 
 React.render(<ResizableTable />, document.getElementById('data'));
-
-window.messageReceived = function (request) {
-    var requestEvent = new CustomEvent('request', {'detail': request});
-    window.dispatchEvent(requestEvent);
-};
