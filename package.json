@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "fixed-data-table": "^0.2.0",
+    "es6-promise": "^2.1.1",
     "react": "^0.13.3",
     "react-json-inspector": "^4.2.2"
   },
