@@ -5,14 +5,8 @@ var ClumpPanelWrapper = require('./ClumpPanelWrapper');
 module.exports = React.createClass({
     getInitialState: function() {
         return {
-            width: window.innerWidth - 15,
-            height: window.innerHeight - 100,
             harLog: {requests: [], responses: []}
         };
-    },
-    handleResize: function(e) {
-        this.setState({width: window.innerWidth - 15});
-        this.setState({height: window.innerHeight - 100});
     },
     parseHar: function(harLog) {
         var output = [];
@@ -25,14 +19,27 @@ module.exports = React.createClass({
         return output;
     },
     divideHar: function(harLog) {
+        var self = this;
         var returnArr = [];
-        var i, j, requests = [], responses = [];
+        var i, j, requests = [], promises = [];
         for(i = 0; i < harLog.length; i++){
             requests = requests.concat(this.divideRequests(harLog[i]));
-
-            responses = responses.concat([1]);
+            promises[i] = new Promise(function (resolve, reject){
+                harLog[i].getContent(function(content){
+                    resolve(content);
+                });
+            });
         }
-        return {requests: requests, responses: responses};
+        Promise.all(promises).then(function(results){
+            var tempHarLog = self.state.harLog;
+            var i, responses = [];
+            for(i = 0; i < results.length; i++) {
+                responses = responses.concat(self.divideResponses(results[i]));
+            }
+            tempHarLog.responses = responses;
+            self.setState({harLog: tempHarLog});
+        });
+        return {requests: requests, responses: []};
     },
     divideRequests: function(har) {
         var i, output = [], requestBody = JSON.parse(har.request.postData.text);
@@ -42,15 +49,18 @@ module.exports = React.createClass({
         return output;
     },
     divideResponses: function(har) {
+        var i, output = [], response = JSON.parse(har);
+        for(var i = 0; i < response.result.clumpResponse.elements.length; i++){
+            output.push(response.result.clumpResponse.elements[i]);
+        }
+        return output;
     },
     componentDidMount: function() {
         var self = this;
         var harLog;
-        window.addEventListener('resize', this.handleResize);
         this.devToolsListenerFunc = function(request) {
             if(request.request.url.includes("clump")){
                 chrome.devtools.network.getHAR(function (newLog) {
-                    console.log('ClumpMain: new clump found');
                     harLog = newLog.entries;
                     harLog = self.parseHar(harLog);
                     harLog = self.divideHar(harLog);
@@ -61,13 +71,10 @@ module.exports = React.createClass({
         chrome.devtools.network.onRequestFinished.addListener(this.devToolsListenerFunc);
     },
     componentDidUnMount: function() {
-        window.removeEventListener('resize', this.handleResize);
         chrome.devtools.network.onRequestFinished.removeListener(this.devToolsListenerFunc);
     },
     render: function() {
         return <ClumpPanelWrapper
-            width={this.state.width}
-            height={this.state.height}
             harLog={this.state.harLog}
         />;
     }

@@ -5,30 +5,27 @@ var ClumpPane = require('./ClumpPane');
 
 module.exports = React.createClass({
     propTypes: {
-        width: PropTypes.number.isRequired,
-        height: PropTypes.number.isRequired,
         harLog: PropTypes.any
     },
     getInitialState: function() {
-        return {selectedObject: 0};
+        return {selectedObject: -1};
     },
-    setSelectedObject: function(bool) {
-        this.setState({selectedObject: bool});
+    setSelectedObject: function(i) {
+        this.setState({selectedObject: i});
     },
     render: function() {
         var pane;
         var clumpPanel = <ClumpPanel
-            width={this.props.width}
-            height={this.props.height}
             harLog={this.props.harLog}
             selectedObject={this.state.selectedObject}
             setSelectedObject={this.setSelectedObject}
         />;
         var clumpPane = <ClumpPane
+            harLog={this.props.harLog}
             selectedObject={this.state.selectedObject}
         />;
 
-        if(this.state.selectedObject) {
+        if(this.state.selectedObject !== -1) {
             pane = <div className="clumpPanelWrapper">
                 {clumpPanel}
                 {clumpPane}

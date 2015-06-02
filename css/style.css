@@ -1,0 +1,81 @@
+body {
+    font-family: Arial;
+    font-weight: normal;
+    background-color: darkgray;
+}
+
+.clumpPanel {
+    margin: 0px;
+    padding: 0px;
+    margin-bottom: 400px;
+    width: 100%;
+}
+
+.clumpPanel table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    table-layout:fixed;
+    background-color: white;
+}
+
+.clumpPanel tr:hover {
+    background-color: lightgoldenrodyellow;
+    cursor: pointer;
+    cursor: hand;
+}
+
+.selected {
+    background-color: lightblue;
+}
+
+.clumpPanel td {
+    vertical-align: middle;
+    word-wrap: break-word;
+    border: 1px solid #000000;
+    text-align: left;
+    padding: 7px;
+    font-size: 10px;
+}
+
+.header, .header:hover{
+    background-color: #d3d3d3;
+}
+
+.clumpPane {
+    position: fixed;
+    background-color: lightyellow;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.paneWrapper {
+    border: 1px solid black;
+    height: 300px;
+    width: 100%;
+    resize: vertical;
+    overflow-y: scroll;
+    padding: 10px;
+}
+
+.paneWrapper > h2 {
+    font-size: 14px;
+}
+
+.goodCode {
+    color: darkgreen;
+}
+
+.badCode {
+    color: red;
+}
+
+.col-0 {
+}
+
+.col-1 {
+    width: 50px;
+}

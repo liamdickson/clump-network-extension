@@ -1,31 +1,39 @@
 var React = require('react');
+var Promise = require('es6-promise').Promise;
 var PropTypes = React.PropTypes;
-var ResizableTable = require('./ResizableTable');
+var Table = require('./Table');
 
 module.exports = React.createClass({
     propTypes: {
-        width: PropTypes.number.isRequired,
-        height: PropTypes.number.isRequired,
         harLog: PropTypes.any,
         selectedObject: PropTypes.any.isRequired,
         setSelectedObject: PropTypes.func.isRequired
     },
-    componentDidMount: function() {
-        var self = this;
-        $(".clumpPanel").click(function () {
-            self.props.setSelectedObject(self.props.selectedObject ? 0 : 1);
-        });
+    getData: function(i, j) {
+        var text = "";
+        if(j === 0 && this.props.harLog.requests[i]){
+            text = this.props.harLog.requests[i] ? this.props.harLog.requests[i].url : '';
+        }else if(j === 1 && this.props.harLog.responses[i]){
+            text = this.props.harLog.responses[i].httpCode;
+            if(text === 200){
+                text = <div className='goodCode'>{text}</div>;
+            }else{
+                text = <div className='badCode'>{text}</div>;
+            }
+        }
+        return text;
     },
     render: function() {
         var panel;
         if(this.props.harLog.requests.length) {
             panel = <div className="clumpPanel">
-                <ResizableTable
-                    width={this.props.width}
-                    height={this.props.height}
+                <Table
                     harLog={this.props.harLog}
-                    selectedObject={this.props.selectedObject}
                     setSelectedObject={this.props.setSelectedObject}
+                    selectedObject={this.props.selectedObject}
+                    numRows={this.props.harLog.requests.length}
+                    numCols={2}
+                    cellData={this.getData}
                 />
             </div>;
         }else{

@@ -54,7 +54,7 @@
 	'use strict';
 	
 	var React = __webpack_require__(2);
-	var ClumpMain = __webpack_require__(227);
+	var ClumpMain = __webpack_require__(158);
 	
 	React.render(React.createElement(ClumpMain, null), document.getElementById('clumpMain'));
 
@@ -20434,97 +20434,22 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 158 */,
-/* 159 */,
-/* 160 */,
-/* 161 */,
-/* 162 */,
-/* 163 */,
-/* 164 */,
-/* 165 */,
-/* 166 */,
-/* 167 */,
-/* 168 */,
-/* 169 */,
-/* 170 */,
-/* 171 */,
-/* 172 */,
-/* 173 */,
-/* 174 */,
-/* 175 */,
-/* 176 */,
-/* 177 */,
-/* 178 */,
-/* 179 */,
-/* 180 */,
-/* 181 */,
-/* 182 */,
-/* 183 */,
-/* 184 */,
-/* 185 */,
-/* 186 */,
-/* 187 */,
-/* 188 */,
-/* 189 */,
-/* 190 */,
-/* 191 */,
-/* 192 */,
-/* 193 */,
-/* 194 */,
-/* 195 */,
-/* 196 */,
-/* 197 */,
-/* 198 */,
-/* 199 */,
-/* 200 */,
-/* 201 */,
-/* 202 */,
-/* 203 */,
-/* 204 */,
-/* 205 */,
-/* 206 */,
-/* 207 */,
-/* 208 */,
-/* 209 */,
-/* 210 */,
-/* 211 */,
-/* 212 */,
-/* 213 */,
-/* 214 */,
-/* 215 */,
-/* 216 */,
-/* 217 */,
-/* 218 */,
-/* 219 */,
-/* 220 */,
-/* 221 */,
-/* 222 */,
-/* 223 */,
-/* 224 */,
-/* 225 */,
-/* 226 */,
-/* 227 */
+/* 158 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(2);
-	var Promise = __webpack_require__(232).Promise;
-	var ClumpPanelWrapper = __webpack_require__(228);
+	var Promise = __webpack_require__(159).Promise;
+	var ClumpPanelWrapper = __webpack_require__(164);
 	
 	module.exports = React.createClass({
 	    displayName: 'exports',
 	
 	    getInitialState: function getInitialState() {
 	        return {
-	            width: window.innerWidth - 15,
-	            height: window.innerHeight - 100,
 	            harLog: { requests: [], responses: [] }
 	        };
-	    },
-	    handleResize: function handleResize(e) {
-	        this.setState({ width: window.innerWidth - 15 });
-	        this.setState({ height: window.innerHeight - 100 });
 	    },
 	    parseHar: function parseHar(harLog) {
 	        var output = [];
@@ -20537,17 +20462,31 @@
 	        return output;
 	    },
 	    divideHar: function divideHar(harLog) {
+	        var self = this;
 	        var returnArr = [];
 	        var i,
 	            j,
 	            requests = [],
-	            responses = [];
+	            promises = [];
 	        for (i = 0; i < harLog.length; i++) {
 	            requests = requests.concat(this.divideRequests(harLog[i]));
-	
-	            responses = responses.concat([1]);
+	            promises[i] = new Promise(function (resolve, reject) {
+	                harLog[i].getContent(function (content) {
+	                    resolve(content);
+	                });
+	            });
 	        }
-	        return { requests: requests, responses: responses };
+	        Promise.all(promises).then(function (results) {
+	            var tempHarLog = self.state.harLog;
+	            var i,
+	                responses = [];
+	            for (i = 0; i < results.length; i++) {
+	                responses = responses.concat(self.divideResponses(results[i]));
+	            }
+	            tempHarLog.responses = responses;
+	            self.setState({ harLog: tempHarLog });
+	        });
+	        return { requests: requests, responses: [] };
 	    },
 	    divideRequests: function divideRequests(har) {
 	        var i,
@@ -20558,15 +20497,21 @@
 	        }
 	        return output;
 	    },
-	    divideResponses: function divideResponses(har) {},
+	    divideResponses: function divideResponses(har) {
+	        var i,
+	            output = [],
+	            response = JSON.parse(har);
+	        for (var i = 0; i < response.result.clumpResponse.elements.length; i++) {
+	            output.push(response.result.clumpResponse.elements[i]);
+	        }
+	        return output;
+	    },
 	    componentDidMount: function componentDidMount() {
 	        var self = this;
 	        var harLog;
-	        window.addEventListener('resize', this.handleResize);
 	        this.devToolsListenerFunc = function (request) {
 	            if (request.request.url.includes('clump')) {
 	                chrome.devtools.network.getHAR(function (newLog) {
-	                    console.log('ClumpMain: new clump found');
 	                    harLog = newLog.entries;
 	                    harLog = self.parseHar(harLog);
 	                    harLog = self.divideHar(harLog);
@@ -20577,220 +20522,17 @@
 	        chrome.devtools.network.onRequestFinished.addListener(this.devToolsListenerFunc);
 	    },
 	    componentDidUnMount: function componentDidUnMount() {
-	        window.removeEventListener('resize', this.handleResize);
 	        chrome.devtools.network.onRequestFinished.removeListener(this.devToolsListenerFunc);
 	    },
 	    render: function render() {
 	        return React.createElement(ClumpPanelWrapper, {
-	            width: this.state.width,
-	            height: this.state.height,
 	            harLog: this.state.harLog
 	        });
 	    }
 	});
 
 /***/ },
-/* 228 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(2);
-	var PropTypes = React.PropTypes;
-	var ClumpPanel = __webpack_require__(230);
-	var ClumpPane = __webpack_require__(229);
-	
-	module.exports = React.createClass({
-	    displayName: 'exports',
-	
-	    propTypes: {
-	        width: PropTypes.number.isRequired,
-	        height: PropTypes.number.isRequired,
-	        harLog: PropTypes.any
-	    },
-	    getInitialState: function getInitialState() {
-	        return { selectedObject: 0 };
-	    },
-	    setSelectedObject: function setSelectedObject(bool) {
-	        this.setState({ selectedObject: bool });
-	    },
-	    render: function render() {
-	        var pane;
-	        var clumpPanel = React.createElement(ClumpPanel, {
-	            width: this.props.width,
-	            height: this.props.height,
-	            harLog: this.props.harLog,
-	            selectedObject: this.state.selectedObject,
-	            setSelectedObject: this.setSelectedObject
-	        });
-	        var clumpPane = React.createElement(ClumpPane, {
-	            selectedObject: this.state.selectedObject
-	        });
-	
-	        if (this.state.selectedObject) {
-	            pane = React.createElement(
-	                'div',
-	                { className: 'clumpPanelWrapper' },
-	                clumpPanel,
-	                clumpPane
-	            );
-	        } else {
-	            pane = React.createElement(
-	                'div',
-	                { className: 'clumpPanelWrapper' },
-	                clumpPanel
-	            );
-	        }
-	
-	        return pane;
-	    }
-	});
-
-/***/ },
-/* 229 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(2);
-	
-	module.exports = React.createClass({
-	    displayName: 'exports',
-	
-	    render: function render() {
-	        return React.createElement(
-	            'div',
-	            null,
-	            'Pane'
-	        );
-	    }
-	});
-
-/***/ },
-/* 230 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(2);
-	var PropTypes = React.PropTypes;
-	var ResizableTable = __webpack_require__(231);
-	
-	module.exports = React.createClass({
-	    displayName: 'exports',
-	
-	    propTypes: {
-	        width: PropTypes.number.isRequired,
-	        height: PropTypes.number.isRequired,
-	        harLog: PropTypes.any,
-	        selectedObject: PropTypes.any.isRequired,
-	        setSelectedObject: PropTypes.func.isRequired
-	    },
-	    componentDidMount: function componentDidMount() {
-	        var self = this;
-	        $('.clumpPanel').click(function () {
-	            self.props.setSelectedObject(self.props.selectedObject ? 0 : 1);
-	        });
-	    },
-	    render: function render() {
-	        var panel;
-	        if (this.props.harLog.requests.length) {
-	            panel = React.createElement(
-	                'div',
-	                { className: 'clumpPanel' },
-	                React.createElement(ResizableTable, {
-	                    width: this.props.width,
-	                    height: this.props.height,
-	                    harLog: this.props.harLog,
-	                    selectedObject: this.props.selectedObject,
-	                    setSelectedObject: this.props.setSelectedObject
-	                })
-	            );
-	        } else {
-	            panel = React.createElement(
-	                'div',
-	                { className: 'clumpPanel' },
-	                React.createElement(
-	                    'h4',
-	                    null,
-	                    'Listening for Clump Requests...'
-	                )
-	            );
-	        }
-	        return panel;
-	    }
-	});
-
-/***/ },
-/* 231 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	var React = __webpack_require__(2);
-	var PropTypes = React.PropTypes;
-	
-	module.exports = React.createClass({
-	    displayName: "exports",
-	
-	    propTypes: {
-	        width: PropTypes.number.isRequired,
-	        height: PropTypes.number.isRequired,
-	        harLog: PropTypes.any.isRequired,
-	        selectedObject: PropTypes.any.isRequired,
-	        setSelectedObject: PropTypes.func.isRequired
-	    },
-	    cellRenderer: function cellRenderer(cellData, cellDataKey, rowData, rowIndex, columnData, width) {
-	        var divStyle = {
-	            width: this.props.width / 2 - 5,
-	            color: "red"
-	        };
-	        return React.createElement(
-	            "div",
-	            { style: divStyle },
-	            cellData
-	        );
-	    },
-	    cellDataGetter: function cellDataGetter(cellDataKey, rowData) {
-	        return rowData[cellDataKey].url;
-	    },
-	    rowGetter: function rowGetter(index) {
-	        return [this.props.harLog.requests[index] ? this.props.harLog.requests[index] : "", this.props.harLog.responses[index] ? this.props.harLog.responses[index] : ""];
-	    },
-	    render: function render() {
-	        var self = this;
-	        var i;
-	
-	        var table = React.createElement(
-	            Table,
-	            {
-	                rowHeight: 50,
-	                rowGetter: this.rowGetter,
-	                rowsCount: this.props.harLog.requests.length,
-	                width: this.props.width,
-	                height: this.props.height,
-	                headerHeight: 50 },
-	            React.createElement(Column, {
-	                label: "Requests",
-	                width: this.props.width / 2,
-	                cellRenderer: this.cellRenderer,
-	                cellDataGetter: this.cellDataGetter,
-	                dataKey: 0
-	            }),
-	            React.createElement(Column, {
-	                label: "Responses",
-	                width: this.props.width / 2,
-	                cellRenderer: this.cellRenderer,
-	                cellDataGetter: this.cellDataGetter,
-	                dataKey: 1
-	            })
-	        );
-	        return table;
-	    }
-	});
-
-/***/ },
-/* 232 */
+/* 159 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var require;var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(process, setImmediate, global, module) {/*!
@@ -20917,7 +20659,7 @@
 	    function lib$es6$promise$asap$$attemptVertex() {
 	      try {
 	        var r = require;
-	        var vertx = __webpack_require__(235);
+	        var vertx = __webpack_require__(162);
 	        lib$es6$promise$asap$$vertxNext = vertx.runOnLoop || vertx.runOnContext;
 	        return lib$es6$promise$asap$$useVertxTimer();
 	      } catch(e) {
@@ -21739,7 +21481,7 @@
 	    };
 	
 	    /* global define:true module:true window: true */
-	    if ("function" === 'function' && __webpack_require__(236)['amd']) {
+	    if ("function" === 'function' && __webpack_require__(163)['amd']) {
 	      !(__WEBPACK_AMD_DEFINE_RESULT__ = function() { return lib$es6$promise$umd$$ES6Promise; }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	    } else if (typeof module !== 'undefined' && module['exports']) {
 	      module['exports'] = lib$es6$promise$umd$$ES6Promise;
@@ -21751,10 +21493,10 @@
 	}).call(this);
 	
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(233).setImmediate, (function() { return this; }()), __webpack_require__(234)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(160).setImmediate, (function() { return this; }()), __webpack_require__(161)(module)))
 
 /***/ },
-/* 233 */
+/* 160 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(setImmediate, clearImmediate) {var nextTick = __webpack_require__(4).nextTick;
@@ -21833,10 +21575,10 @@
 	exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate : function(id) {
 	  delete immediateIds[id];
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(233).setImmediate, __webpack_require__(233).clearImmediate))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(160).setImmediate, __webpack_require__(160).clearImmediate))
 
 /***/ },
-/* 234 */
+/* 161 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function(module) {
@@ -21852,16 +21594,993 @@
 
 
 /***/ },
-/* 235 */
+/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* (ignored) */
 
 /***/ },
-/* 236 */
+/* 163 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function() { throw new Error("define cannot be used indirect"); };
+
+
+/***/ },
+/* 164 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(2);
+	var PropTypes = React.PropTypes;
+	var ClumpPanel = __webpack_require__(165);
+	var ClumpPane = __webpack_require__(169);
+	
+	module.exports = React.createClass({
+	    displayName: 'exports',
+	
+	    propTypes: {
+	        harLog: PropTypes.any
+	    },
+	    getInitialState: function getInitialState() {
+	        return { selectedObject: -1 };
+	    },
+	    setSelectedObject: function setSelectedObject(i) {
+	        this.setState({ selectedObject: i });
+	    },
+	    render: function render() {
+	        var pane;
+	        var clumpPanel = React.createElement(ClumpPanel, {
+	            harLog: this.props.harLog,
+	            selectedObject: this.state.selectedObject,
+	            setSelectedObject: this.setSelectedObject
+	        });
+	        var clumpPane = React.createElement(ClumpPane, {
+	            harLog: this.props.harLog,
+	            selectedObject: this.state.selectedObject
+	        });
+	
+	        if (this.state.selectedObject !== -1) {
+	            pane = React.createElement(
+	                'div',
+	                { className: 'clumpPanelWrapper' },
+	                clumpPanel,
+	                clumpPane
+	            );
+	        } else {
+	            pane = React.createElement(
+	                'div',
+	                { className: 'clumpPanelWrapper' },
+	                clumpPanel
+	            );
+	        }
+	
+	        return pane;
+	    }
+	});
+
+/***/ },
+/* 165 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(2);
+	var Promise = __webpack_require__(159).Promise;
+	var PropTypes = React.PropTypes;
+	var Table = __webpack_require__(166);
+	
+	module.exports = React.createClass({
+	    displayName: 'exports',
+	
+	    propTypes: {
+	        harLog: PropTypes.any,
+	        selectedObject: PropTypes.any.isRequired,
+	        setSelectedObject: PropTypes.func.isRequired
+	    },
+	    getData: function getData(i, j) {
+	        var text = '';
+	        if (j === 0 && this.props.harLog.requests[i]) {
+	            text = this.props.harLog.requests[i] ? this.props.harLog.requests[i].url : '';
+	        } else if (j === 1 && this.props.harLog.responses[i]) {
+	            text = this.props.harLog.responses[i].httpCode;
+	            if (text === 200) {
+	                text = React.createElement(
+	                    'div',
+	                    { className: 'goodCode' },
+	                    text
+	                );
+	            } else {
+	                text = React.createElement(
+	                    'div',
+	                    { className: 'badCode' },
+	                    text
+	                );
+	            }
+	        }
+	        return text;
+	    },
+	    render: function render() {
+	        var panel;
+	        if (this.props.harLog.requests.length) {
+	            panel = React.createElement(
+	                'div',
+	                { className: 'clumpPanel' },
+	                React.createElement(Table, {
+	                    harLog: this.props.harLog,
+	                    setSelectedObject: this.props.setSelectedObject,
+	                    selectedObject: this.props.selectedObject,
+	                    numRows: this.props.harLog.requests.length,
+	                    numCols: 2,
+	                    cellData: this.getData
+	                })
+	            );
+	        } else {
+	            panel = React.createElement(
+	                'div',
+	                { className: 'clumpPanel' },
+	                React.createElement(
+	                    'h4',
+	                    null,
+	                    'Listening for Clump Requests...'
+	                )
+	            );
+	        }
+	        return panel;
+	    }
+	});
+
+/***/ },
+/* 166 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(2);
+	var PropTypes = React.PropTypes;
+	var TableRow = __webpack_require__(167);
+	
+	module.exports = React.createClass({
+	    displayName: 'exports',
+	
+	    propTypes: {
+	        setSelectedObject: PropTypes.func.isRequired,
+	        selectedObject: PropTypes.any.isRequired,
+	        numRows: PropTypes.number.isRequired,
+	        numCols: PropTypes.number.isRequired,
+	        cellData: PropTypes.func.isRequired
+	    },
+	    headerData: function headerData(i, j) {
+	        if (j === 0) {
+	            return 'Request URL';
+	        } else {
+	            return 'Code';
+	        }
+	    },
+	    render: function render() {
+	        $('td').unbind();
+	        var i,
+	            className,
+	            rows = [],
+	            self = this;
+	        className = 'header';
+	        rows.push(React.createElement(TableRow, {
+	            key: -1,
+	            row: -1,
+	            setSelectedObject: this.props.setSelectedObject,
+	            numCols: this.props.numCols,
+	            cellData: this.headerData,
+	            className: className
+	        }));
+	
+	        for (i = 0; i < this.props.numRows; i++) {
+	            className = 'row-' + i;
+	            rows.push(React.createElement(TableRow, {
+	                key: i,
+	                row: i,
+	                setSelectedObject: this.props.setSelectedObject,
+	                numCols: this.props.numCols,
+	                cellData: this.props.cellData,
+	                className: className
+	            }));
+	        }
+	        $('td').click(function () {
+	            var fullClass = $(this).parent().attr('class');
+	            $('.selected').removeClass('selected');
+	            $(this).parent().addClass('selected');
+	            var rowNum = /row-(\d+)/.exec(fullClass)[1];
+	            self.props.setSelectedObject(rowNum);
+	        });
+	        return React.createElement(
+	            'table',
+	            null,
+	            rows
+	        );
+	    }
+	});
+
+/***/ },
+/* 167 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(2);
+	var PropTypes = React.PropTypes;
+	var TableData = __webpack_require__(168);
+	
+	module.exports = React.createClass({
+	    displayName: 'exports',
+	
+	    propTypes: {
+	        setSelectedObject: PropTypes.func.isRequired,
+	        row: PropTypes.number.isRequired,
+	        numCols: PropTypes.number.isRequired,
+	        cellData: PropTypes.func.isRequired,
+	        className: PropTypes.string.isRequired
+	    },
+	    render: function render() {
+	        var i,
+	            data = [],
+	            className;
+	        for (i = 0; i < this.props.numCols; i++) {
+	            className = this.props.className + ' col-' + i;
+	            data.push(React.createElement(TableData, {
+	                key: i,
+	                className: className,
+	                cellData: this.props.cellData,
+	                row: this.props.row,
+	                col: i
+	            }));
+	        }
+	        return React.createElement(
+	            'tr',
+	            { className: this.props.className },
+	            data
+	        );
+	    }
+	});
+
+/***/ },
+/* 168 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(2);
+	var PropTypes = React.PropTypes;
+	
+	module.exports = React.createClass({
+	    displayName: 'exports',
+	
+	    propTypes: {
+	        row: PropTypes.number.isRequired,
+	        col: PropTypes.number.isRequired,
+	        cellData: PropTypes.func.isRequired,
+	        className: PropTypes.string.isRequired
+	    },
+	    render: function render() {
+	        return React.createElement(
+	            'td',
+	            { className: this.props.className },
+	            this.props.cellData(this.props.row, this.props.col)
+	        );
+	    }
+	});
+
+/***/ },
+/* 169 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(2);
+	var PropTypes = React.PropTypes;
+	var Inspector = __webpack_require__(170);
+	
+	module.exports = React.createClass({
+	    displayName: 'exports',
+	
+	    propTypes: {
+	        harLog: PropTypes.any,
+	        selectedObject: PropTypes.any.isRequired
+	    },
+	    render: function render() {
+	        return React.createElement(
+	            'div',
+	            { className: 'clumpPane' },
+	            React.createElement(
+	                'div',
+	                { className: 'paneWrapper' },
+	                React.createElement(
+	                    'h2',
+	                    null,
+	                    'Response Body'
+	                ),
+	                React.createElement(Inspector, { data: this.props.harLog.responses[this.props.selectedObject].payload,
+	                    search: false,
+	                    'class': 'json-data'
+	                })
+	            )
+	        );
+	    }
+	});
+
+/***/ },
+/* 170 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(2);
+	var D = React.DOM;
+	
+	var Leaf = __webpack_require__(171);
+	var leaf = React.createFactory(Leaf);
+	var SearchBar = __webpack_require__(177);
+	var searchBar = React.createFactory(SearchBar);
+	
+	var filterer = __webpack_require__(180);
+	var isEmpty = __webpack_require__(182);
+	var lens = __webpack_require__(183);
+	var noop = __webpack_require__(175);
+	
+	module.exports = React.createClass({
+	    getDefaultProps: function() {
+	        return {
+	            data: null,
+	            search: searchBar,
+	            className: '',
+	            id: 'json-' + Date.now(),
+	            onClick: noop,
+	            validateQuery: function(query) {
+	                return query.length >= 2;
+	            },
+	            /**
+	             * Decide whether the leaf node at given `keypath` should be
+	             * expanded initially.
+	             * @param  {String} keypath
+	             * @param  {Any} value
+	             * @return {Boolean}
+	             */
+	            isExpanded: function(keypath, value) {
+	                return false;
+	            }
+	        };
+	    },
+	    getInitialState: function() {
+	        return {
+	            query: ''
+	        };
+	    },
+	    render: function() {
+	        var p = this.props;
+	        var s = this.state;
+	
+	        var data = s.query ? s.filterer(s.query) : p.data;
+	
+	        var rootNode = leaf({
+	            data: data,
+	            onClick: p.onClick,
+	            id: p.id,
+	            getOriginal: this.getOriginal,
+	            query: s.query,
+	            label: 'root',
+	            root: true,
+	            isExpanded: p.isExpanded
+	        });
+	
+	        var notFound = D.div({ className: 'json-inspector__not-found' }, 'Nothing found');
+	
+	        return D.div({ className: 'json-inspector ' + p.className },
+	            this.renderToolbar(),
+	            isEmpty(data) ? notFound : rootNode);
+	    },
+	    renderToolbar: function() {
+	        var search = this.props.search;
+	
+	        if (search) {
+	            return D.div({ className: 'json-inspector__toolbar' },
+	                search({ onChange: this.search, data: this.props.data }));
+	        }
+	    },
+	    search: function(query) {
+	        if (query === '' || this.props.validateQuery(query)) {
+	            this.setState({
+	                query: query
+	            });
+	        }
+	    },
+	    componentDidMount: function() {
+	        this.createFilterer(this.props.data);
+	    },
+	    componentWillReceiveProps: function(p) {
+	        this.createFilterer(p.data);
+	    },
+	    shouldComponentUpdate: function (p, s) {
+	        return s.query !== this.state.query ||
+	            p.data !== this.props.data ||
+	            p.onClick !== this.props.onClick;
+	    },
+	    createFilterer: function(data) {
+	        this.setState({
+	            filterer: filterer(data)
+	        });
+	    },
+	    getOriginal: function(path) {
+	        return lens(this.props.data, path);
+	    }
+	});
+
+
+/***/ },
+/* 171 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(2);
+	var D = React.DOM;
+	
+	var uid = __webpack_require__(172);
+	var type = __webpack_require__(173);
+	var isFunction = __webpack_require__(184);
+	
+	var Selection = __webpack_require__(174);
+	var selection = React.createFactory(Selection);
+	var Highlighter = __webpack_require__(176);
+	var highlighter = React.createFactory(Highlighter);
+	
+	var PATH_PREFIX = '.root.';
+	
+	var Leaf = React.createClass({
+	    getInitialState: function() {
+	        return {
+	            expanded: this._isInitiallyExpanded()
+	        };
+	    },
+	    getDefaultProps: function() {
+	        return {
+	            root: false,
+	            prefix: ''
+	        };
+	    },
+	    render: function() {
+	        var id = 'id_' + uid();
+	        var p = this.props;
+	
+	        var d = {
+	            path: this.keypath(),
+	            key: p.label.toString(),
+	            value: p.data
+	        };
+	
+	        var onLabelClick = this._onClick.bind(this, d);
+	
+	        return D.div({ className: this.getClassName(), id: 'leaf-' + this._rootPath() },
+	            D.input({ className: 'json-inspector__radio', type: 'radio', name: p.id, id: id }),
+	            D.label({ className: 'json-inspector__line', htmlFor: id, onClick: onLabelClick },
+	                D.div({ className: 'json-inspector__flatpath' },
+	                    d.path),
+	                D.span({ className: 'json-inspector__key' },
+	                    this.format(d.key),
+	                    ':',
+	                    selection({ value: d.key })),
+	                this.renderTitle(),
+	                this.renderShowOriginalButton()),
+	            this.renderChildren());
+	    },
+	    renderTitle: function() {
+	        var data = this.data();
+	        var t = type(data);
+	
+	        switch (t) {
+	            case 'Array':
+	                return D.span({ className: 'json-inspector__value json-inspector__value_helper' },
+	                    '[] ' + items(data.length));
+	            case 'Object':
+	                return D.span({ className: 'json-inspector__value json-inspector__value_helper' },
+	                    '{} ' + items(Object.keys(data).length));
+	            default:
+	                return D.span({ className: 'json-inspector__value json-inspector__value_' + t.toLowerCase() },
+	                    this.format(String(data)),
+	                    selection({ value: String(data) }));
+	        }
+	    },
+	    renderChildren: function() {
+	        var p = this.props;
+	        var childPrefix = this._rootPath();
+	        var data = this.data();
+	
+	        if (this.state.expanded && !isPrimitive(data)) {
+	            return Object.keys(data).map(function(key) {
+	                return leaf({
+	                    data: data[key],
+	                    label: key,
+	                    prefix: childPrefix,
+	                    onClick: p.onClick,
+	                    id: p.id,
+	                    query: p.query,
+	                    getOriginal: this.state.original ? null : p.getOriginal,
+	                    key: key,
+	                    isExpanded: p.isExpanded
+	                });
+	            }, this);
+	        }
+	
+	        return null;
+	    },
+	    renderShowOriginalButton: function() {
+	        var p = this.props;
+	
+	        if (isPrimitive(p.data) || this.state.original || !p.getOriginal || !p.query || contains(this.keypath(), p.query)) {
+	            return null;
+	        }
+	
+	        return D.span({
+	            className: 'json-inspector__show-original',
+	            onClick: this._onShowOriginalClick
+	        });
+	    },
+	    componentWillReceiveProps: function(p) {
+	        if (p.query) {
+	            this.setState({
+	                expanded: !contains(p.label, p.query)
+	            });
+	        } else if (!p.root) {
+	            this.setState({
+	                expanded: false
+	            });
+	        }
+	    },
+	    _rootPath: function() {
+	        return this.props.prefix + '.' + this.props.label;
+	    },
+	    keypath: function() {
+	        return this._rootPath().substr(PATH_PREFIX.length);
+	    },
+	    data: function() {
+	        return this.state.original || this.props.data;
+	    },
+	    format: function(string) {
+	        return highlighter({
+	            string: string,
+	            highlight: this.props.query
+	        });
+	    },
+	    getClassName: function() {
+	        var cn = 'json-inspector__leaf';
+	
+	        if (this.props.root) {
+	            cn += ' json-inspector__leaf_root';
+	        }
+	
+	        if (this.state.expanded) {
+	            cn += ' json-inspector__leaf_expanded';
+	        }
+	
+	        if (!isPrimitive(this.props.data)) {
+	            cn += ' json-inspector__leaf_composite';
+	        }
+	
+	        return cn;
+	    },
+	    toggle: function() {
+	        this.setState({
+	            expanded: !this.state.expanded
+	        });
+	    },
+	    _onClick: function(data, e) {
+	        this.toggle();
+	        this.props.onClick(data);
+	
+	        e.stopPropagation();
+	    },
+	    _onShowOriginalClick: function(e) {
+	        this.setState({
+	            original: this.props.getOriginal(this.keypath())
+	        });
+	
+	        e.stopPropagation();
+	    },
+	    _isInitiallyExpanded: function() {
+	        var p = this.props;
+	        var keypath = this.keypath();
+	
+	        if (p.root) {
+	            return true;
+	        }
+	
+	        if (p.query === '') {
+	            return p.isExpanded(keypath, p.data);
+	        } else {
+	            // When a search query is specified, first check if the keypath
+	            // contains the search query: if it does, then the current leaf
+	            // is itself a search result and there is no need to expand further.
+	            //
+	            // Having a `getOriginal` function passed signalizes that current
+	            // leaf only displays a subset of data, thus should be rendered
+	            // expanded to reveal the children that is being searched for.
+	            return !contains(keypath, p.query) && isFunction(p.getOriginal);
+	        }
+	    }
+	});
+	
+	// FIXME: There should be a better way to call a component factory from inside
+	// component definition.
+	var leaf = React.createFactory(Leaf);
+	
+	function items(count) {
+	    return count + (count === 1 ? ' item' : ' items');
+	}
+	
+	function contains(string, substring) {
+	    return string.indexOf(substring) !== -1;
+	}
+	
+	function isPrimitive(value) {
+	    var t = type(value);
+	    return t !== 'Object' && t !== 'Array';
+	}
+	
+	module.exports = Leaf;
+
+
+/***/ },
+/* 172 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var id = Math.ceil(Math.random() * 10);
+	
+	module.exports = function() {
+	    return ++id;
+	};
+
+
+/***/ },
+/* 173 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = function(value) {
+	    return Object.prototype.toString.call(value).slice(8, -1);
+	};
+
+
+/***/ },
+/* 174 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(2);
+	var input = React.DOM.input;
+	
+	var noop = __webpack_require__(175);
+	
+	module.exports = React.createClass({
+	    getDefaultProps: function() {
+	        return {
+	            value: ''
+	        };
+	    },
+	    render: function() {
+	        return input({
+	            className: 'json-inspector__selection',
+	            value: this.props.value,
+	            size: Math.max(1, this.props.value.length - 1),
+	            tabIndex: '-1',
+	            spellCheck: 'false',
+	            onClick: this.onClick,
+	            onFocus: this.onFocus,
+	            onChange: this.onChange
+	        });
+	    },
+	    onChange: noop,
+	    onClick: function(e) {
+	        e.stopPropagation();
+	    },
+	    onFocus: function(e) {
+	        e.target.select();
+	    }
+	});
+
+
+/***/ },
+/* 175 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = function() {};
+
+
+/***/ },
+/* 176 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(2);
+	var span = React.DOM.span;
+	
+	module.exports = React.createClass({
+	    getDefaultProps: function() {
+	        return {
+	            string: '',
+	            highlight: ''
+	        };
+	    },
+	    shouldComponentUpdate: function(p) {
+	        return p.highlight !== this.props.highlight;
+	    },
+	    render: function() {
+	        var p = this.props;
+	
+	        if (!p.highlight || p.string.indexOf(p.highlight) === -1) {
+	            return span(null, p.string);
+	        }
+	
+	        return span(null,
+	            p.string.split(p.highlight).map(function(part, index) {
+	                return span({ key: index },
+	                    index > 0 ?
+	                        span({ className: 'json-inspector__hl' }, p.highlight) :
+	                        null,
+	                    part);
+	            }));
+	    }
+	});
+
+
+/***/ },
+/* 177 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var debounce = __webpack_require__(178);
+	var React = __webpack_require__(2);
+	var input = React.DOM.input;
+	
+	var noop = __webpack_require__(175);
+	
+	module.exports = React.createClass({
+	    getDefaultProps: function() {
+	        return {
+	            timeout: 100,
+	            onChange: noop
+	        };
+	    },
+	    render: function() {
+	        return input({
+	            className: 'json-inspector__search',
+	            type: 'search',
+	            placeholder: 'Search',
+	            ref: 'query',
+	            onChange: debounce(this.update, this.props.timeout)
+	        });
+	    },
+	    update: function() {
+	        this.props.onChange(this.refs.query.getDOMNode().value);
+	    }
+	});
+
+
+/***/ },
+/* 178 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * Module dependencies.
+	 */
+	
+	var now = __webpack_require__(179);
+	
+	/**
+	 * Returns a function, that, as long as it continues to be invoked, will not
+	 * be triggered. The function will be called after it stops being called for
+	 * N milliseconds. If `immediate` is passed, trigger the function on the
+	 * leading edge, instead of the trailing.
+	 *
+	 * @source underscore.js
+	 * @see http://unscriptable.com/2009/03/20/debouncing-javascript-methods/
+	 * @param {Function} function to wrap
+	 * @param {Number} timeout in ms (`100`)
+	 * @param {Boolean} whether to execute at the beginning (`false`)
+	 * @api public
+	 */
+	
+	module.exports = function debounce(func, wait, immediate){
+	  var timeout, args, context, timestamp, result;
+	  if (null == wait) wait = 100;
+	
+	  function later() {
+	    var last = now() - timestamp;
+	
+	    if (last < wait && last > 0) {
+	      timeout = setTimeout(later, wait - last);
+	    } else {
+	      timeout = null;
+	      if (!immediate) {
+	        result = func.apply(context, args);
+	        if (!timeout) context = args = null;
+	      }
+	    }
+	  };
+	
+	  return function debounced() {
+	    context = this;
+	    args = arguments;
+	    timestamp = now();
+	    var callNow = immediate && !timeout;
+	    if (!timeout) timeout = setTimeout(later, wait);
+	    if (callNow) {
+	      result = func.apply(context, args);
+	      context = args = null;
+	    }
+	
+	    return result;
+	  };
+	};
+
+
+/***/ },
+/* 179 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = Date.now || now
+	
+	function now() {
+	    return new Date().getTime()
+	}
+
+
+/***/ },
+/* 180 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var assign = __webpack_require__(181);
+	var keys = Object.keys;
+	
+	var type = __webpack_require__(173);
+	var isEmpty = __webpack_require__(182);
+	
+	module.exports = function(data) {
+	    var cache = {};
+	
+	    return function(query) {
+	        var subquery;
+	
+	        if (!cache[query]) {
+	            for (var i = query.length - 1; i > 0; i -= 1) {
+	                subquery = query.substr(0, i);
+	
+	                if (cache[subquery]) {
+	                    cache[query] = find(cache[subquery], query);
+	                    break;
+	                }
+	            }
+	        }
+	
+	        if (!cache[query]) {
+	            cache[query] = find(data, query);
+	        }
+	
+	        return cache[query];
+	    };
+	};
+	
+	function find(data, query) {
+	    return keys(data).reduce(function(acc, key) {
+	        var value = data[key];
+	        var matches;
+	
+	        if (isPrimitive(value)) {
+	            if (contains(query, key) || contains(query, value)) {
+	                acc[key] = value;
+	            }
+	        } else {
+	            if (contains(query, key)) {
+	                acc[key] = value;
+	            } else {
+	                matches = find(value, query);
+	
+	                if (!isEmpty(matches)) {
+	                    assign(acc, pair(key, matches));
+	                }
+	            }
+	        }
+	
+	        return acc;
+	    }, {});
+	}
+	
+	function contains(query, string) {
+	    return string && String(string).indexOf(query) !== -1;
+	}
+	
+	function isPrimitive(value) {
+	    var t = type(value);
+	    return t !== 'Object' && t !== 'Array';
+	}
+	
+	function pair(key, value) {
+	    var p = {};
+	    p[key] = value;
+	    return p;
+	}
+
+
+/***/ },
+/* 181 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	function ToObject(val) {
+		if (val == null) {
+			throw new TypeError('Object.assign cannot be called with null or undefined');
+		}
+	
+		return Object(val);
+	}
+	
+	module.exports = Object.assign || function (target, source) {
+		var from;
+		var keys;
+		var to = ToObject(target);
+	
+		for (var s = 1; s < arguments.length; s++) {
+			from = arguments[s];
+			keys = Object.keys(Object(from));
+	
+			for (var i = 0; i < keys.length; i++) {
+				to[keys[i]] = from[keys[i]];
+			}
+		}
+	
+		return to;
+	};
+
+
+/***/ },
+/* 182 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = function(object) {
+	    return Object.keys(object).length === 0;
+	};
+
+
+/***/ },
+/* 183 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var type = __webpack_require__(173);
+	
+	var PATH_DELIMITER = '.';
+	
+	function lens(data, path) {
+	    var p = path.split(PATH_DELIMITER);
+	    var segment = p.shift();
+	
+	    if (!segment) {
+	        return data;
+	    }
+	
+	    var t = type(data);
+	
+	    if (t === 'Array' && data[integer(segment)]) {
+	        return lens(data[integer(segment)], p.join(PATH_DELIMITER));
+	    } else if (t === 'Object' && data[segment]) {
+	        return lens(data[segment], p.join(PATH_DELIMITER));
+	    }
+	}
+	
+	function integer(string) {
+	    return parseInt(string, 10);
+	}
+	
+	module.exports = lens;
+
+
+/***/ },
+/* 184 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = function(fn) {
+	    return typeof fn === 'function';
+	};
 
 
 /***/ }
