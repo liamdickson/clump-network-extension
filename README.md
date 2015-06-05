@@ -2,6 +2,8 @@
 
 The purpose of this chrome extension is to view clump network traffic.
 
+![Component screenshot](http://i.imgur.com/huyesAA.png)
+
 The clump github repo can be found here for more information:
 https://github.com/getclump/clump
 
