@@ -22528,7 +22528,7 @@
 	
 	var React = __webpack_require__(2);
 	var PropTypes = React.PropTypes;
-	var Inspector = __webpack_require__(177);
+	var Inspector = __webpack_require__(218);
 	
 	module.exports = React.createClass({
 	    displayName: 'exports',
@@ -22647,41 +22647,86 @@
 /***/ },
 /* 175 */,
 /* 176 */,
-/* 177 */
+/* 177 */,
+/* 178 */,
+/* 179 */,
+/* 180 */,
+/* 181 */,
+/* 182 */,
+/* 183 */,
+/* 184 */,
+/* 185 */,
+/* 186 */,
+/* 187 */,
+/* 188 */,
+/* 189 */,
+/* 190 */,
+/* 191 */,
+/* 192 */,
+/* 193 */,
+/* 194 */,
+/* 195 */,
+/* 196 */,
+/* 197 */,
+/* 198 */,
+/* 199 */,
+/* 200 */,
+/* 201 */,
+/* 202 */,
+/* 203 */,
+/* 204 */,
+/* 205 */,
+/* 206 */,
+/* 207 */,
+/* 208 */,
+/* 209 */,
+/* 210 */,
+/* 211 */,
+/* 212 */,
+/* 213 */,
+/* 214 */,
+/* 215 */,
+/* 216 */,
+/* 217 */,
+/* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+	
 	var React = __webpack_require__(2);
 	var D = React.DOM;
 	
-	var Leaf = __webpack_require__(178);
+	var Leaf = __webpack_require__(219);
 	var leaf = React.createFactory(Leaf);
-	var SearchBar = __webpack_require__(184);
+	var SearchBar = __webpack_require__(225);
 	var searchBar = React.createFactory(SearchBar);
 	
-	var filterer = __webpack_require__(187);
-	var isEmpty = __webpack_require__(189);
-	var lens = __webpack_require__(190);
-	var noop = __webpack_require__(182);
+	var filterer = __webpack_require__(226);
+	var isEmpty = __webpack_require__(227);
+	var lens = __webpack_require__(228);
+	var noop = __webpack_require__(223);
 	
 	module.exports = React.createClass({
-	    getDefaultProps: function() {
+	    displayName: 'exports',
+	
+	    getDefaultProps: function getDefaultProps() {
 	        return {
 	            data: null,
 	            search: searchBar,
 	            className: '',
 	            id: 'json-' + Date.now(),
 	            onClick: noop,
-	            validateQuery: function(query) {
+	            validateQuery: function validateQuery(query) {
 	                return query.length >= 2;
 	            }
 	        };
 	    },
-	    getInitialState: function() {
+	    getInitialState: function getInitialState() {
 	        return {
 	            query: ''
 	        };
 	    },
-	    render: function() {
+	    render: function render() {
 	        var p = this.props;
 	        var s = this.state;
 	
@@ -22699,79 +22744,77 @@
 	
 	        var notFound = D.div({ className: 'json-inspector__not-found' }, 'Nothing found');
 	
-	        return D.div({ className: 'json-inspector ' + p.className },
-	            this.renderToolbar(),
-	            isEmpty(data) ? notFound : rootNode);
+	        return D.div({ className: 'json-inspector ' + p.className }, this.renderToolbar(), isEmpty(data) ? notFound : rootNode);
 	    },
-	    renderToolbar: function() {
+	    renderToolbar: function renderToolbar() {
 	        var search = this.props.search;
 	
 	        if (search) {
-	            return D.div({ className: 'json-inspector__toolbar' },
-	                search({ onChange: this.search, data: this.props.data }));
+	            return D.div({ className: 'json-inspector__toolbar' }, search({ onChange: this.search, data: this.props.data }));
 	        }
 	    },
-	    search: function(query) {
+	    search: function search(query) {
 	        if (query === '' || this.props.validateQuery(query)) {
 	            this.setState({
 	                query: query
 	            });
 	        }
 	    },
-	    componentDidMount: function() {
+	    componentDidMount: function componentDidMount() {
 	        this.createFilterer(this.props.data);
 	    },
-	    componentWillReceiveProps: function(p) {
+	    componentWillReceiveProps: function componentWillReceiveProps(p) {
 	        this.createFilterer(p.data);
 	    },
-	    shouldComponentUpdate: function (p, s) {
-	        return s.query !== this.state.query ||
-	            p.data !== this.props.data ||
-	            p.onClick !== this.props.onClick;
+	    shouldComponentUpdate: function shouldComponentUpdate(p, s) {
+	        return s.query !== this.state.query || p.data !== this.props.data || p.onClick !== this.props.onClick;
 	    },
-	    createFilterer: function(data) {
+	    createFilterer: function createFilterer(data) {
 	        this.setState({
 	            filterer: filterer(data)
 	        });
 	    },
-	    getOriginal: function(path) {
+	    getOriginal: function getOriginal(path) {
 	        return lens(this.props.data, path);
 	    }
 	});
 
-
 /***/ },
-/* 178 */
+/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+	
 	var React = __webpack_require__(2);
 	var D = React.DOM;
 	
-	var uid = __webpack_require__(179);
-	var type = __webpack_require__(180);
+	var uid = __webpack_require__(220);
+	var type = __webpack_require__(221);
 	
-	var Selection = __webpack_require__(181);
+	var Selection = __webpack_require__(222);
 	var selection = React.createFactory(Selection);
-	var Highlighter = __webpack_require__(183);
+	var Highlighter = __webpack_require__(224);
 	var highlighter = React.createFactory(Highlighter);
 	
 	var PATH_PREFIX = '.root.';
 	
 	var Leaf = React.createClass({
-	    getInitialState: function() {
+	    displayName: 'Leaf',
+	
+	    getInitialState: function getInitialState() {
 	        var p = this.props;
 	
 	        return {
-	            expanded: (p.query && !contains(this.path(), p.query) && p.getOriginal)
+	            expanded: p.query && !contains(this.path(), p.query) && p.getOriginal
 	        };
 	    },
-	    getDefaultProps: function() {
+	    getDefaultProps: function getDefaultProps() {
 	        return {
 	            isRoot: false,
 	            prefix: ''
 	        };
 	    },
-	    render: function() {
+	    render: function render() {
 	        var id = 'id_' + uid();
 	        var p = this.props;
 	
@@ -22783,43 +22826,28 @@
 	
 	        var onLabelClick = this._onClick.bind(this, d);
 	
-	        return D.div({ className: this.getClassName(), id: 'leaf-' + this.path() },
-	            D.input({ className: 'json-inspector__radio', type: 'radio', name: p.id, id: id }),
-	            D.label({ className: 'json-inspector__line', htmlFor: id, onClick: onLabelClick },
-	                D.div({ className: 'json-inspector__flatpath' },
-	                    d.path),
-	                D.span({ className: 'json-inspector__key' },
-	                    this.format(d.key),
-	                    ':',
-	                    selection({ value: d.key })),
-	                this.renderTitle(),
-	                this.renderShowOriginalButton()),
-	            this.renderChildren());
+	        return D.div({ className: this.getClassName(), id: 'leaf-' + this.path() }, D.input({ className: 'json-inspector__radio', type: 'radio', name: p.id, id: id }), D.label({ className: 'json-inspector__line', htmlFor: id, onClick: onLabelClick }, D.div({ className: 'json-inspector__flatpath' }, d.path), D.span({ className: 'json-inspector__key' }, this.format(d.key), ':', selection({ value: d.key })), this.renderTitle(), this.renderShowOriginalButton()), this.renderChildren());
 	    },
-	    renderTitle: function() {
+	    renderTitle: function renderTitle() {
 	        var data = this.data();
 	        var t = type(data);
 	
 	        switch (t) {
 	            case 'Array':
-	                return D.span({ className: 'json-inspector__value json-inspector__value_helper' },
-	                    '[] ' + items(data.length));
+	                return D.span({ className: 'json-inspector__value json-inspector__value_helper' }, '[] ' + items(data.length));
 	            case 'Object':
-	                return D.span({ className: 'json-inspector__value json-inspector__value_helper' },
-	                    '{} ' + items(Object.keys(data).length));
+	                return D.span({ className: 'json-inspector__value json-inspector__value_helper' }, '{} ' + items(Object.keys(data).length));
 	            default:
-	                return D.span({ className: 'json-inspector__value json-inspector__value_' + t.toLowerCase() },
-	                    this.format(String(data)),
-	                    selection({ value: String(data) }));
+	                return D.span({ className: 'json-inspector__value json-inspector__value_' + t.toLowerCase() }, this.format(String(data)), selection({ value: String(data) }));
 	        }
 	    },
-	    renderChildren: function() {
+	    renderChildren: function renderChildren() {
 	        var p = this.props;
 	        var childPrefix = this.path();
 	        var data = this.data();
 	
 	        if (this.state.expanded && !isPrimitive(data)) {
-	            return Object.keys(data).map(function(key) {
+	            return Object.keys(data).map(function (key) {
 	                return leaf({
 	                    data: data[key],
 	                    label: key,
@@ -22828,12 +22856,11 @@
 	                    id: p.id,
 	                    query: p.query,
 	                    getOriginal: this.state.original ? null : p.getOriginal,
-	                    key: key,
-	                });
+	                    key: key });
 	            }, this);
 	        }
 	    },
-	    renderShowOriginalButton: function() {
+	    renderShowOriginalButton: function renderShowOriginalButton() {
 	        var p = this.props;
 	
 	        if (isPrimitive(p.data) || this.state.original || !p.getOriginal || !p.query || contains(this.path(), p.query)) {
@@ -22845,7 +22872,7 @@
 	            onClick: this._onShowOriginalClick
 	        });
 	    },
-	    componentWillReceiveProps: function(p) {
+	    componentWillReceiveProps: function componentWillReceiveProps(p) {
 	        if (p.query) {
 	            this.setState({
 	                expanded: !contains(p.label, p.query)
@@ -22856,19 +22883,19 @@
 	            });
 	        }
 	    },
-	    path: function() {
+	    path: function path() {
 	        return this.props.prefix + '.' + this.props.label;
 	    },
-	    data: function() {
+	    data: function data() {
 	        return this.state.original || this.props.data;
 	    },
-	    format: function(string) {
+	    format: function format(string) {
 	        return highlighter({
 	            string: string,
 	            highlight: this.props.query
 	        });
 	    },
-	    getClassName: function() {
+	    getClassName: function getClassName() {
 	        var cn = 'json-inspector__leaf';
 	
 	        if (this.props.isRoot) {
@@ -22885,18 +22912,18 @@
 	
 	        return cn;
 	    },
-	    toggle: function() {
+	    toggle: function toggle() {
 	        this.setState({
 	            expanded: !this.state.expanded
 	        });
 	    },
-	    _onClick: function(data, e) {
+	    _onClick: function _onClick(data, e) {
 	        this.toggle();
 	        this.props.onClick(data);
 	
 	        e.stopPropagation();
 	    },
-	    _onShowOriginalClick: function(e) {
+	    _onShowOriginalClick: function _onShowOriginalClick(e) {
 	        this.setState({
 	            original: this.props.getOriginal(this.path().substr(PATH_PREFIX.length))
 	        });
@@ -22924,43 +22951,48 @@
 	
 	module.exports = Leaf;
 
-
 /***/ },
-/* 179 */
+/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
+	
 	var id = Math.ceil(Math.random() * 10);
 	
-	module.exports = function() {
+	module.exports = function () {
 	    return ++id;
 	};
 
-
 /***/ },
-/* 180 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = function(value) {
+	"use strict";
+	
+	module.exports = function (value) {
 	    return Object.prototype.toString.call(value).slice(8, -1);
 	};
 
-
 /***/ },
-/* 181 */
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+	
 	var React = __webpack_require__(2);
 	var input = React.DOM.input;
 	
-	var noop = __webpack_require__(182);
+	var noop = __webpack_require__(223);
 	
 	module.exports = React.createClass({
-	    getDefaultProps: function() {
+	    displayName: 'exports',
+	
+	    getDefaultProps: function getDefaultProps() {
 	        return {
 	            value: ''
 	        };
 	    },
-	    render: function() {
+	    render: function render() {
 	        return input({
 	            className: 'json-inspector__selection',
 	            value: this.props.value,
@@ -22973,76 +23005,78 @@
 	        });
 	    },
 	    onChange: noop,
-	    onClick: function(e) {
+	    onClick: function onClick(e) {
 	        e.stopPropagation();
 	    },
-	    onFocus: function(e) {
+	    onFocus: function onFocus(e) {
 	        e.target.select();
 	    }
 	});
 
-
 /***/ },
-/* 182 */
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = function() {};
-
+	"use strict";
+	
+	module.exports = function () {};
 
 /***/ },
-/* 183 */
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+	
 	var React = __webpack_require__(2);
 	var span = React.DOM.span;
 	
 	module.exports = React.createClass({
-	    getDefaultProps: function() {
+	    displayName: 'exports',
+	
+	    getDefaultProps: function getDefaultProps() {
 	        return {
 	            string: '',
 	            highlight: ''
 	        };
 	    },
-	    shouldComponentUpdate: function(p) {
+	    shouldComponentUpdate: function shouldComponentUpdate(p) {
 	        return p.highlight !== this.props.highlight;
 	    },
-	    render: function() {
+	    render: function render() {
 	        var p = this.props;
 	
 	        if (!p.highlight || p.string.indexOf(p.highlight) === -1) {
 	            return span(null, p.string);
 	        }
 	
-	        return span(null,
-	            p.string.split(p.highlight).map(function(part, index) {
-	                return span({ key: index },
-	                    index > 0 ?
-	                        span({ className: 'json-inspector__hl' }, p.highlight) :
-	                        null,
-	                    part);
-	            }));
+	        return span(null, p.string.split(p.highlight).map(function (part, index) {
+	            return span({ key: index }, index > 0 ? span({ className: 'json-inspector__hl' }, p.highlight) : null, part);
+	        }));
 	    }
 	});
 
-
 /***/ },
-/* 184 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var debounce = __webpack_require__(185);
+	'use strict';
+	
+	var debounce = __webpack_require__(229);
 	var React = __webpack_require__(2);
 	var input = React.DOM.input;
 	
-	var noop = __webpack_require__(182);
+	var noop = __webpack_require__(223);
 	
 	module.exports = React.createClass({
-	    getDefaultProps: function() {
+	    displayName: 'exports',
+	
+	    getDefaultProps: function getDefaultProps() {
 	        return {
 	            timeout: 100,
 	            onChange: noop
 	        };
 	    },
-	    render: function() {
+	    render: function render() {
 	        return input({
 	            className: 'json-inspector__search',
 	            type: 'search',
@@ -23051,14 +23085,148 @@
 	            onChange: debounce(this.update, this.props.timeout)
 	        });
 	    },
-	    update: function() {
+	    update: function update() {
 	        this.props.onChange(this.refs.query.getDOMNode().value);
 	    }
 	});
 
+/***/ },
+/* 226 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var assign = __webpack_require__(231);
+	var keys = Object.keys;
+	
+	var type = __webpack_require__(221);
+	var isEmpty = __webpack_require__(227);
+	
+	module.exports = function (data) {
+	    var cache = {};
+	
+	    return function (query) {
+	        var subquery;
+	
+	        if (!cache[query]) {
+	            for (var i = query.length - 1; i > 0; i -= 1) {
+	                subquery = query.substr(0, i);
+	
+	                if (cache[subquery]) {
+	                    cache[query] = find(cache[subquery], query);
+	                    break;
+	                }
+	            }
+	        }
+	
+	        if (!cache[query]) {
+	            cache[query] = find(data, query);
+	        }
+	
+	        return cache[query];
+	    };
+	};
+	
+	function find(data, query) {
+	    return keys(data).reduce(function (acc, key) {
+	        var value = data[key];
+	        var matches;
+	
+	        if (isPrimitive(value)) {
+	            if (contains(query, key) || contains(query, value)) {
+	                acc[key] = value;
+	            }
+	        } else {
+	            if (contains(query, key)) {
+	                acc[key] = value;
+	            } else {
+	                matches = find(value, query);
+	
+	                if (!isEmpty(matches)) {
+	                    assign(acc, pair(key, matches));
+	                }
+	            }
+	        }
+	
+	        return acc;
+	    }, {});
+	}
+	
+	function contains(query, string) {
+	    return string && String(string).indexOf(query) !== -1;
+	}
+	
+	function isPrimitive(value) {
+	    var t = type(value);
+	    return t !== 'Object' && t !== 'Array';
+	}
+	
+	function pair(key, value) {
+	    var p = {};
+	    p[key] = value;
+	    return p;
+	}
 
 /***/ },
-/* 185 */
+/* 227 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	module.exports = function (object) {
+	    return Object.keys(object).length === 0;
+	};
+
+/***/ },
+/* 228 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var type = __webpack_require__(221);
+	
+	var PATH_DELIMITER = '.';
+	
+	function lens(_x, _x2) {
+	    var _again = true;
+	
+	    _function: while (_again) {
+	        var data = _x,
+	            path = _x2;
+	        p = segment = t = undefined;
+	        _again = false;
+	
+	        var p = path.split(PATH_DELIMITER);
+	        var segment = p.shift();
+	
+	        if (!segment) {
+	            return data;
+	        }
+	
+	        var t = type(data);
+	
+	        if (t === 'Array' && data[integer(segment)]) {
+	            _x = data[integer(segment)];
+	            _x2 = p.join(PATH_DELIMITER);
+	            _again = true;
+	            continue _function;
+	        } else if (t === 'Object' && data[segment]) {
+	            _x = data[segment];
+	            _x2 = p.join(PATH_DELIMITER);
+	            _again = true;
+	            continue _function;
+	        }
+	    }
+	}
+	
+	function integer(string) {
+	    return parseInt(string, 10);
+	}
+	
+	module.exports = lens;
+
+/***/ },
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -23066,7 +23234,7 @@
 	 * Module dependencies.
 	 */
 	
-	var now = __webpack_require__(186);
+	var now = __webpack_require__(230);
 	
 	/**
 	 * Returns a function, that, as long as it continues to be invoked, will not
@@ -23117,7 +23285,7 @@
 
 
 /***/ },
-/* 186 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = Date.now || now
@@ -23128,86 +23296,11 @@
 
 
 /***/ },
-/* 187 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var assign = __webpack_require__(188);
-	var keys = Object.keys;
-	
-	var type = __webpack_require__(180);
-	var isEmpty = __webpack_require__(189);
-	
-	module.exports = function(data) {
-	    var cache = {};
-	
-	    return function(query) {
-	        var subquery;
-	
-	        if (!cache[query]) {
-	            for (var i = query.length - 1; i > 0; i -= 1) {
-	                subquery = query.substr(0, i);
-	
-	                if (cache[subquery]) {
-	                    cache[query] = find(cache[subquery], query);
-	                    break;
-	                }
-	            }
-	        }
-	
-	        if (!cache[query]) {
-	            cache[query] = find(data, query);
-	        }
-	
-	        return cache[query];
-	    };
-	};
-	
-	function find(data, query) {
-	    return keys(data).reduce(function(acc, key) {
-	        var value = data[key];
-	        var matches;
-	
-	        if (isPrimitive(value)) {
-	            if (contains(query, key) || contains(query, value)) {
-	                acc[key] = value;
-	            }
-	        } else {
-	            if (contains(query, key)) {
-	                acc[key] = value;
-	            } else {
-	                matches = find(value, query);
-	
-	                if (!isEmpty(matches)) {
-	                    assign(acc, pair(key, matches));
-	                }
-	            }
-	        }
-	
-	        return acc;
-	    }, {});
-	}
-	
-	function contains(query, string) {
-	    return string && String(string).indexOf(query) !== -1;
-	}
-	
-	function isPrimitive(value) {
-	    var t = type(value);
-	    return t !== 'Object' && t !== 'Array';
-	}
-	
-	function pair(key, value) {
-	    var p = {};
-	    p[key] = value;
-	    return p;
-	}
-
-
-/***/ },
-/* 188 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
+	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
 	
 	function ToObject(val) {
 		if (val == null) {
@@ -23217,6 +23310,18 @@
 		return Object(val);
 	}
 	
+	function ownEnumerableKeys(obj) {
+		var keys = Object.getOwnPropertyNames(obj);
+	
+		if (Object.getOwnPropertySymbols) {
+			keys = keys.concat(Object.getOwnPropertySymbols(obj));
+		}
+	
+		return keys.filter(function (key) {
+			return propIsEnumerable.call(obj, key);
+		});
+	}
+	
 	module.exports = Object.assign || function (target, source) {
 		var from;
 		var keys;
@@ -23224,7 +23329,7 @@
 	
 		for (var s = 1; s < arguments.length; s++) {
 			from = arguments[s];
-			keys = Object.keys(Object(from));
+			keys = ownEnumerableKeys(Object(from));
 	
 			for (var i = 0; i < keys.length; i++) {
 				to[keys[i]] = from[keys[i]];
@@ -23233,47 +23338,6 @@
 	
 		return to;
 	};
-
-
-/***/ },
-/* 189 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = function(object) {
-	    return Object.keys(object).length === 0;
-	};
-
-
-/***/ },
-/* 190 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var type = __webpack_require__(180);
-	
-	var PATH_DELIMITER = '.';
-	
-	function lens(data, path) {
-	    var p = path.split(PATH_DELIMITER);
-	    var segment = p.shift();
-	
-	    if (!segment) {
-	        return data;
-	    }
-	
-	    var t = type(data);
-	
-	    if (t === 'Array' && data[integer(segment)]) {
-	        return lens(data[integer(segment)], p.join(PATH_DELIMITER));
-	    } else if (t === 'Object' && data[segment]) {
-	        return lens(data[segment], p.join(PATH_DELIMITER));
-	    }
-	}
-	
-	function integer(string) {
-	    return parseInt(string, 10);
-	}
-	
-	module.exports = lens;
 
 
 /***/ }
