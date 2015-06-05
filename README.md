@@ -1,6 +1,6 @@
-# clump-network-extension
+# clump-chrome-extension
 
-The purpose of this chrome extension is to view clump network traffic.
+The purpose of this chrome extension is to make it easier to view clump network traffic.
 
 ![Component screenshot](http://i.imgur.com/huyesAA.png)
 

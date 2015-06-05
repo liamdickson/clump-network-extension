@@ -2601,7 +2601,7 @@
 	    ],
 	    isMounted: [
 	      'isMounted',
-	      'Instead, make sure to clean up subscriptions and pending harLog in ' +
+	      'Instead, make sure to clean up subscriptions and pending requests in ' +
 	      'componentWillUnmount to prevent memory leaks.'
 	    ],
 	    replaceProps: [
@@ -20573,7 +20573,7 @@
 	 * @copyright Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors (Conversion to ES6 API by Jake Archibald)
 	 * @license   Licensed under MIT license
 	 *            See https://raw.githubusercontent.com/jakearchibald/es6-promise/master/LICENSE
-	 * @version   2.1.1
+	 * @version   2.2.0
 	 */
 	
 	(function() {
@@ -20603,6 +20603,8 @@
 	    var lib$es6$promise$asap$$len = 0;
 	    var lib$es6$promise$asap$$toString = {}.toString;
 	    var lib$es6$promise$asap$$vertxNext;
+	    var lib$es6$promise$asap$$customSchedulerFn;
+	
 	    function lib$es6$promise$asap$$asap(callback, arg) {
 	      lib$es6$promise$asap$$queue[lib$es6$promise$asap$$len] = callback;
 	      lib$es6$promise$asap$$queue[lib$es6$promise$asap$$len + 1] = arg;
@@ -20611,11 +20613,18 @@
 	        // If len is 2, that means that we need to schedule an async flush.
 	        // If additional callbacks are queued before the queue is flushed, they
 	        // will be processed by this flush that we are scheduling.
-	        lib$es6$promise$asap$$scheduleFlush();
+	        if (lib$es6$promise$asap$$customSchedulerFn) {
+	          lib$es6$promise$asap$$customSchedulerFn(lib$es6$promise$asap$$flush);
+	        } else {
+	          lib$es6$promise$asap$$scheduleFlush();
+	        }
 	      }
 	    }
 	
 	    var lib$es6$promise$asap$$default = lib$es6$promise$asap$$asap;
+	    function lib$es6$promise$asap$$setScheduler(scheduleFn) {
+	      lib$es6$promise$asap$$customSchedulerFn = scheduleFn;
+	    }
 	
 	    var lib$es6$promise$asap$$browserWindow = (typeof window !== 'undefined') ? window : undefined;
 	    var lib$es6$promise$asap$$browserGlobal = lib$es6$promise$asap$$browserWindow || {};
@@ -21109,7 +21118,7 @@
 	    /**
 	      Promise objects represent the eventual result of an asynchronous operation. The
 	      primary way of interacting with a promise is through its `then` method, which
-	      registers callbacks to receive either a promise’s eventual value or the reason
+	      registers callbacks to receive either a promise's eventual value or the reason
 	      why the promise cannot be fulfilled.
 	
 	      Terminology
@@ -21232,6 +21241,8 @@
 	    lib$es6$promise$promise$$Promise.race = lib$es6$promise$promise$race$$default;
 	    lib$es6$promise$promise$$Promise.resolve = lib$es6$promise$promise$resolve$$default;
 	    lib$es6$promise$promise$$Promise.reject = lib$es6$promise$promise$reject$$default;
+	    lib$es6$promise$promise$$Promise._setScheduler = lib$es6$promise$asap$$setScheduler;
+	    lib$es6$promise$promise$$Promise._asap = lib$es6$promise$asap$$default;
 	
 	    lib$es6$promise$promise$$Promise.prototype = {
 	      constructor: lib$es6$promise$promise$$Promise,
@@ -22528,7 +22539,7 @@
 	
 	var React = __webpack_require__(2);
 	var PropTypes = React.PropTypes;
-	var Inspector = __webpack_require__(218);
+	var Inspector = __webpack_require__(175);
 	
 	module.exports = React.createClass({
 	    displayName: 'exports',
@@ -22645,50 +22656,7 @@
 	});
 
 /***/ },
-/* 175 */,
-/* 176 */,
-/* 177 */,
-/* 178 */,
-/* 179 */,
-/* 180 */,
-/* 181 */,
-/* 182 */,
-/* 183 */,
-/* 184 */,
-/* 185 */,
-/* 186 */,
-/* 187 */,
-/* 188 */,
-/* 189 */,
-/* 190 */,
-/* 191 */,
-/* 192 */,
-/* 193 */,
-/* 194 */,
-/* 195 */,
-/* 196 */,
-/* 197 */,
-/* 198 */,
-/* 199 */,
-/* 200 */,
-/* 201 */,
-/* 202 */,
-/* 203 */,
-/* 204 */,
-/* 205 */,
-/* 206 */,
-/* 207 */,
-/* 208 */,
-/* 209 */,
-/* 210 */,
-/* 211 */,
-/* 212 */,
-/* 213 */,
-/* 214 */,
-/* 215 */,
-/* 216 */,
-/* 217 */,
-/* 218 */
+/* 175 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22696,15 +22664,15 @@
 	var React = __webpack_require__(2);
 	var D = React.DOM;
 	
-	var Leaf = __webpack_require__(219);
+	var Leaf = __webpack_require__(176);
 	var leaf = React.createFactory(Leaf);
-	var SearchBar = __webpack_require__(225);
+	var SearchBar = __webpack_require__(182);
 	var searchBar = React.createFactory(SearchBar);
 	
-	var filterer = __webpack_require__(226);
-	var isEmpty = __webpack_require__(227);
-	var lens = __webpack_require__(228);
-	var noop = __webpack_require__(223);
+	var filterer = __webpack_require__(185);
+	var isEmpty = __webpack_require__(187);
+	var lens = __webpack_require__(188);
+	var noop = __webpack_require__(180);
 	
 	module.exports = React.createClass({
 	    displayName: 'exports',
@@ -22780,7 +22748,7 @@
 	});
 
 /***/ },
-/* 219 */
+/* 176 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22788,12 +22756,12 @@
 	var React = __webpack_require__(2);
 	var D = React.DOM;
 	
-	var uid = __webpack_require__(220);
-	var type = __webpack_require__(221);
+	var uid = __webpack_require__(177);
+	var type = __webpack_require__(178);
 	
-	var Selection = __webpack_require__(222);
+	var Selection = __webpack_require__(179);
 	var selection = React.createFactory(Selection);
-	var Highlighter = __webpack_require__(224);
+	var Highlighter = __webpack_require__(181);
 	var highlighter = React.createFactory(Highlighter);
 	
 	var PATH_PREFIX = '.root.';
@@ -22856,7 +22824,8 @@
 	                    id: p.id,
 	                    query: p.query,
 	                    getOriginal: this.state.original ? null : p.getOriginal,
-	                    key: key });
+	                    key: key
+	                });
 	            }, this);
 	        }
 	    },
@@ -22952,7 +22921,7 @@
 	module.exports = Leaf;
 
 /***/ },
-/* 220 */
+/* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -22964,7 +22933,7 @@
 	};
 
 /***/ },
-/* 221 */
+/* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -22974,7 +22943,7 @@
 	};
 
 /***/ },
-/* 222 */
+/* 179 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22982,7 +22951,7 @@
 	var React = __webpack_require__(2);
 	var input = React.DOM.input;
 	
-	var noop = __webpack_require__(223);
+	var noop = __webpack_require__(180);
 	
 	module.exports = React.createClass({
 	    displayName: 'exports',
@@ -23014,7 +22983,7 @@
 	});
 
 /***/ },
-/* 223 */
+/* 180 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -23022,7 +22991,7 @@
 	module.exports = function () {};
 
 /***/ },
-/* 224 */
+/* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23056,16 +23025,16 @@
 	});
 
 /***/ },
-/* 225 */
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var debounce = __webpack_require__(229);
+	var debounce = __webpack_require__(183);
 	var React = __webpack_require__(2);
 	var input = React.DOM.input;
 	
-	var noop = __webpack_require__(223);
+	var noop = __webpack_require__(180);
 	
 	module.exports = React.createClass({
 	    displayName: 'exports',
@@ -23091,16 +23060,86 @@
 	});
 
 /***/ },
-/* 226 */
+/* 183 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * Module dependencies.
+	 */
+	
+	var now = __webpack_require__(184);
+	
+	/**
+	 * Returns a function, that, as long as it continues to be invoked, will not
+	 * be triggered. The function will be called after it stops being called for
+	 * N milliseconds. If `immediate` is passed, trigger the function on the
+	 * leading edge, instead of the trailing.
+	 *
+	 * @source underscore.js
+	 * @see http://unscriptable.com/2009/03/20/debouncing-javascript-methods/
+	 * @param {Function} function to wrap
+	 * @param {Number} timeout in ms (`100`)
+	 * @param {Boolean} whether to execute at the beginning (`false`)
+	 * @api public
+	 */
+	
+	module.exports = function debounce(func, wait, immediate){
+	  var timeout, args, context, timestamp, result;
+	  if (null == wait) wait = 100;
+	
+	  function later() {
+	    var last = now() - timestamp;
+	
+	    if (last < wait && last > 0) {
+	      timeout = setTimeout(later, wait - last);
+	    } else {
+	      timeout = null;
+	      if (!immediate) {
+	        result = func.apply(context, args);
+	        if (!timeout) context = args = null;
+	      }
+	    }
+	  };
+	
+	  return function debounced() {
+	    context = this;
+	    args = arguments;
+	    timestamp = now();
+	    var callNow = immediate && !timeout;
+	    if (!timeout) timeout = setTimeout(later, wait);
+	    if (callNow) {
+	      result = func.apply(context, args);
+	      context = args = null;
+	    }
+	
+	    return result;
+	  };
+	};
+
+
+/***/ },
+/* 184 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = Date.now || now
+	
+	function now() {
+	    return new Date().getTime()
+	}
+
+
+/***/ },
+/* 185 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var assign = __webpack_require__(231);
+	var assign = __webpack_require__(186);
 	var keys = Object.keys;
 	
-	var type = __webpack_require__(221);
-	var isEmpty = __webpack_require__(227);
+	var type = __webpack_require__(178);
+	var isEmpty = __webpack_require__(187);
 	
 	module.exports = function (data) {
 	    var cache = {};
@@ -23168,135 +23207,7 @@
 	}
 
 /***/ },
-/* 227 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	module.exports = function (object) {
-	    return Object.keys(object).length === 0;
-	};
-
-/***/ },
-/* 228 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var type = __webpack_require__(221);
-	
-	var PATH_DELIMITER = '.';
-	
-	function lens(_x, _x2) {
-	    var _again = true;
-	
-	    _function: while (_again) {
-	        var data = _x,
-	            path = _x2;
-	        p = segment = t = undefined;
-	        _again = false;
-	
-	        var p = path.split(PATH_DELIMITER);
-	        var segment = p.shift();
-	
-	        if (!segment) {
-	            return data;
-	        }
-	
-	        var t = type(data);
-	
-	        if (t === 'Array' && data[integer(segment)]) {
-	            _x = data[integer(segment)];
-	            _x2 = p.join(PATH_DELIMITER);
-	            _again = true;
-	            continue _function;
-	        } else if (t === 'Object' && data[segment]) {
-	            _x = data[segment];
-	            _x2 = p.join(PATH_DELIMITER);
-	            _again = true;
-	            continue _function;
-	        }
-	    }
-	}
-	
-	function integer(string) {
-	    return parseInt(string, 10);
-	}
-	
-	module.exports = lens;
-
-/***/ },
-/* 229 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/**
-	 * Module dependencies.
-	 */
-	
-	var now = __webpack_require__(230);
-	
-	/**
-	 * Returns a function, that, as long as it continues to be invoked, will not
-	 * be triggered. The function will be called after it stops being called for
-	 * N milliseconds. If `immediate` is passed, trigger the function on the
-	 * leading edge, instead of the trailing.
-	 *
-	 * @source underscore.js
-	 * @see http://unscriptable.com/2009/03/20/debouncing-javascript-methods/
-	 * @param {Function} function to wrap
-	 * @param {Number} timeout in ms (`100`)
-	 * @param {Boolean} whether to execute at the beginning (`false`)
-	 * @api public
-	 */
-	
-	module.exports = function debounce(func, wait, immediate){
-	  var timeout, args, context, timestamp, result;
-	  if (null == wait) wait = 100;
-	
-	  function later() {
-	    var last = now() - timestamp;
-	
-	    if (last < wait && last > 0) {
-	      timeout = setTimeout(later, wait - last);
-	    } else {
-	      timeout = null;
-	      if (!immediate) {
-	        result = func.apply(context, args);
-	        if (!timeout) context = args = null;
-	      }
-	    }
-	  };
-	
-	  return function debounced() {
-	    context = this;
-	    args = arguments;
-	    timestamp = now();
-	    var callNow = immediate && !timeout;
-	    if (!timeout) timeout = setTimeout(later, wait);
-	    if (callNow) {
-	      result = func.apply(context, args);
-	      context = args = null;
-	    }
-	
-	    return result;
-	  };
-	};
-
-
-/***/ },
-/* 230 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = Date.now || now
-	
-	function now() {
-	    return new Date().getTime()
-	}
-
-
-/***/ },
-/* 231 */
+/* 186 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23339,6 +23250,64 @@
 		return to;
 	};
 
+
+/***/ },
+/* 187 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	module.exports = function (object) {
+	    return Object.keys(object).length === 0;
+	};
+
+/***/ },
+/* 188 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var type = __webpack_require__(178);
+	
+	var PATH_DELIMITER = '.';
+	
+	function lens(_x, _x2) {
+	    var _again = true;
+	
+	    _function: while (_again) {
+	        var data = _x,
+	            path = _x2;
+	        p = segment = t = undefined;
+	        _again = false;
+	
+	        var p = path.split(PATH_DELIMITER);
+	        var segment = p.shift();
+	
+	        if (!segment) {
+	            return data;
+	        }
+	
+	        var t = type(data);
+	
+	        if (t === 'Array' && data[integer(segment)]) {
+	            _x = data[integer(segment)];
+	            _x2 = p.join(PATH_DELIMITER);
+	            _again = true;
+	            continue _function;
+	        } else if (t === 'Object' && data[segment]) {
+	            _x = data[segment];
+	            _x2 = p.join(PATH_DELIMITER);
+	            _again = true;
+	            continue _function;
+	        }
+	    }
+	}
+	
+	function integer(string) {
+	    return parseInt(string, 10);
+	}
+	
+	module.exports = lens;
 
 /***/ }
 /******/ ]);
